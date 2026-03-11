@@ -552,7 +552,11 @@ myPackages.map(pkg=>(
 <td>{pkg.destination}</td>
 <td>{pkg.days} Days / {pkg.nights} Nights</td>
 <td>${pkg.price}</td>
-<td>{pkg.status}</td>
+<td>
+<span className={`status-badge status-${pkg.status}`}>
+{pkg.status}
+</span>
+</td>
 
 <td>
 

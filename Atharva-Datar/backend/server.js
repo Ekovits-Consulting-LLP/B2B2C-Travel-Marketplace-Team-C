@@ -5,6 +5,10 @@ const bcrypt = require('bcrypt');
 const db = require('./db');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
+if(!fs.existsSync('uploads')){
+fs.mkdirSync('uploads', { recursive: true });
+}
 
 const storage = multer.diskStorage({
 
@@ -166,11 +170,11 @@ VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,'pending',$12,$13)`,
 [
 pkg.title,
 pkg.destination,
-pkg.days || pkg.duration || 1,
-pkg.nights || 1,
-pkg.price,
-pkg.travelers || 1,
-pkg.rating || 3,
+Number(pkg.days || pkg.duration || 1),
+Number(pkg.nights || 1),
+Number(pkg.price || 0),
+Number(pkg.travelers || 1),
+Number(pkg.rating || 3),
 pkg.description || '',
 JSON.stringify(pkg.inclusions || []),
 JSON.stringify(pkg.exclusions || []),
@@ -264,42 +268,42 @@ app.get('/api/admin/pending-packages', async (req, res) => {
 });
 
 // Approve a package
-app.put('/api/admin/packages/:id/approve', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updatePackage = await db.query(
-            "UPDATE packages SET status = 'approved' WHERE id = $1 RETURNING *",
-            [id]
-        );
+// app.put('/api/admin/packages/:id/approve', async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const updatePackage = await db.query(
+//             "UPDATE packages SET status = 'approved' WHERE id = $1 RETURNING *",
+//             [id]
+//         );
 
-        if (updatePackage.rows.length === 0) {
-            return res.status(404).json({ message: 'Package not found' });
-        }
-        res.json({ message: 'Package approved', package: updatePackage.rows[0] });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ message: 'Server error approving package' });
-    }
-});
+//         if (updatePackage.rows.length === 0) {
+//             return res.status(404).json({ message: 'Package not found' });
+//         }
+//         res.json({ message: 'Package approved', package: updatePackage.rows[0] });
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).json({ message: 'Server error approving package' });
+//     }
+// });
 
 // Reject a package
-app.put('/api/admin/packages/:id/reject', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updatePackage = await db.query(
-            "UPDATE packages SET status = 'rejected' WHERE id = $1 RETURNING *",
-            [id]
-        );
+// app.put('/api/admin/packages/:id/reject', async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const updatePackage = await db.query(
+//             "UPDATE packages SET status = 'rejected' WHERE id = $1 RETURNING *",
+//             [id]
+//         );
 
-        if (updatePackage.rows.length === 0) {
-            return res.status(404).json({ message: 'Package not found' });
-        }
-        res.json({ message: 'Package rejected', package: updatePackage.rows[0] });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ message: 'Server error rejecting package' });
-    }
-});
+//         if (updatePackage.rows.length === 0) {
+//             return res.status(404).json({ message: 'Package not found' });
+//         }
+//         res.json({ message: 'Package rejected', package: updatePackage.rows[0] });
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).json({ message: 'Server error rejecting package' });
+//     }
+// });
 
 app.get("/api/packages/:id", async (req,res)=>{
 
@@ -343,6 +347,10 @@ const pkg = await db.query(
 
 let images = pkg.rows[0].images || [];
 
+if(typeof images === "string"){
+   images = JSON.parse(images);
+}
+
 images.push(newImage);
 
 await db.query(
@@ -374,6 +382,10 @@ const pkg = await db.query(
 );
 
 let images = pkg.rows[0].images || [];
+
+if(typeof images === "string"){
+images = JSON.parse(images);
+}
 
 images = images.filter(img => img !== image);
 
@@ -407,6 +419,10 @@ const pkg = await db.query(
 );
 
 let images = pkg.rows[0].images || [];
+
+if(typeof images === "string"){
+images = JSON.parse(images);
+}
 
 images = images.map(img => img === oldImage ? newImage : img);
 
@@ -460,7 +476,9 @@ app.delete('/api/admin/agents/:id', async (req, res) => {
 
     }
 
-    app.post('/api/bookings', async (req, res) => {
+});
+
+app.post('/api/bookings', async (req, res) => {
     try {
 
         const { package_id, customer_name, email, travelers } = req.body;
@@ -479,8 +497,7 @@ app.delete('/api/admin/agents/:id', async (req, res) => {
         console.error(err);
         res.status(500).json({message:"Booking failed"});
     }
-});
-});
+    });
 
 // app.get('/api/agent/bookings', async (req,res)=>{
 //     try{
@@ -586,14 +603,13 @@ const companyLogo =
 req.files?.company_logo ? req.files.company_logo[0].filename : null;
 
 const updated = await db.query(
-
 `UPDATE users
 SET agency_name=$1,
 full_name=$2,
 phone=$3,
 address=$4,
-agent_photo = COALESCE($4,agent_photo),
-company_logo = COALESCE($5,company_logo)
+agent_photo = COALESCE($5, agent_photo),
+company_logo = COALESCE($6, company_logo)
 WHERE id=$7
 RETURNING *`,
 
@@ -885,6 +901,10 @@ exclusions,
 itinerary
 } = req.body;
 
+if(!package_id || !agent_id){
+return res.status(400).json({message:"Missing package or agent id"});
+}
+
 /* uploaded images */
 
 const images = req.files ? req.files.map(file => file.filename) : [];
@@ -914,6 +934,10 @@ res.status(500).json({message:"Update request failed"});
 app.post("/api/agent/delete-package", async (req,res)=>{
 
 const { package_id, agent_id } = req.body;
+
+if(!package_id || !agent_id){
+return res.status(400).json({message:"Missing data"});
+}
 
 await db.query(
 `INSERT INTO package_requests
@@ -974,16 +998,33 @@ try{
 
 const { request_id } = req.body;
 
+/* get request */
+
 const request = await db.query(
 `SELECT * FROM package_requests WHERE request_id=$1`,
 [request_id]
 );
 
+if(request.rows.length === 0){
+return res.status(404).json({message:"Request not found"});
+}
+
 const r = request.rows[0];
+
+/* UPDATE request status FIRST */
+
+await db.query(
+`UPDATE package_requests SET status='approved' WHERE request_id=$1`,
+[request_id]
+);
+
+/* handle UPDATE request */
 
 if(r.request_type === "UPDATE"){
 
-const data = typeof r.new_data === "string" ? JSON.parse(r.new_data) : r.new_data;
+const data = typeof r.new_data === "string"
+? JSON.parse(r.new_data)
+: r.new_data;
 
 await db.query(
 `UPDATE packages SET
@@ -997,7 +1038,8 @@ rating=$7,
 description=$8,
 inclusions=$9,
 exclusions=$10,
-itinerary=$11
+itinerary=$11,
+status='approved'
 WHERE id=$12`,
 [
 data.title,
@@ -1016,6 +1058,9 @@ r.package_id
 );
 
 }
+
+/* handle DELETE request */
+
 if(r.request_type === "DELETE"){
 
 await db.query(
@@ -1024,13 +1069,6 @@ await db.query(
 );
 
 }
-
-await db.query(
-`UPDATE package_requests
-SET status='approved'
-WHERE request_id=$1`,
-[request_id]
-);
 
 res.json({message:"Request approved"});
 
@@ -1065,4 +1103,41 @@ res.status(500).json({message:"Reject failed"});
 
 }
 
+});
+
+app.put('/api/admin/packages/:id/approve', async (req, res) => {
+try {
+
+const { id } = req.params;
+
+await db.query(
+"UPDATE packages SET status='approved' WHERE id=$1",
+[id]
+);
+
+res.json({message:"Package approved"});
+
+} catch(err){
+console.error(err);
+res.status(500).json({message:"Approval failed"});
+}
+});
+
+
+app.put('/api/admin/packages/:id/reject', async (req, res) => {
+try {
+
+const { id } = req.params;
+
+await db.query(
+"UPDATE packages SET status='rejected' WHERE id=$1",
+[id]
+);
+
+res.json({message:"Package rejected"});
+
+} catch(err){
+console.error(err);
+res.status(500).json({message:"Reject failed"});
+}
 });

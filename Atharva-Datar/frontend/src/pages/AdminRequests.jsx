@@ -68,13 +68,19 @@ request_id:id
 setSelectedPackage(null);
 fetchRequests();
 
-const fetchRequests = async()=>{
+
+/* REJECT */
+
+const rejectRequest = async(id)=>{
 
 try{
 
-const res = await axios.get("http://localhost:5000/admin/package-requests");
-console.log(res.data);   // 👈 check real status coming from backend
-setRequests(res.data);
+await axios.post("http://localhost:5000/admin/reject-request",{
+request_id:id
+});
+
+setSelectedPackage(null);
+fetchRequests();
 
 }catch(err){
 console.error(err);

@@ -97,23 +97,27 @@
 
     };
 
-    /* ---------- APPROVE / REJECT ---------- */
+   /* ---------- APPROVE / REJECT ---------- */
 
     const handleApprove = async(id)=>{
-    await fetch(`/api/admin/packages/${id}/approve`,{method:"PUT"});
-    fetchDashboardData();
-    };
 
-    const handleReject = async(id)=>{
-    await fetch(`/api/admin/packages/${id}/reject`,{method:"PUT"});
-    fetchDashboardData();
-    };
+await fetch(`/api/admin/packages/${id}/approve`,{
+method:"PUT"
+});
 
-    const approveAccount = async(id)=>{
-    await fetch(`/api/admin/users/${id}/approve`,{method:"PUT"});
-    fetchDashboardData();
-    };
+fetchDashboardData();
 
+};
+
+const handleReject = async(id)=>{
+
+await fetch(`/api/admin/packages/${id}/reject`,{
+method:"PUT"
+});
+
+fetchDashboardData();
+
+};
     /* ---------- IMAGE MANAGEMENT ---------- */
 
     const deleteImage = async (packageId,image)=>{
