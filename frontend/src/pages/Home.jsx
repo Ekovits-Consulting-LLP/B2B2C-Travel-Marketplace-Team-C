@@ -17,9 +17,8 @@ import {
   Calendar,
   MapPin,
   Clock,
-  TrendingUp,
   ArrowRight,
-  Download
+  
 } from "lucide-react";
 
 import {
@@ -27,11 +26,8 @@ import {
   FaCalendarAlt,
   FaUsers,
   FaSearch,
-  FaShieldAlt,
-  FaUserCheck,
   FaCheckCircle,
-  FaBullseye,
-  FaDownload
+
 } from "react-icons/fa";
 
 /* SWIPER */
@@ -62,165 +58,131 @@ function Home() {
 
   const [destination, setDestination] = useState("");
 
-  /* DATA */
 
-  const popularCities = [
-    "Paris",
-    "Bali",
-    "Dubai",
-    "Tokyo",
-    "Maldives",
-    "New York"
-  ];
 
   const featuredPackages = mockPackages.filter(pkg => pkg.featured);
 
   return (
     <div>
 
-      {/* ================= HERO SECTION ================= */}
+         {/* ================= HERO SECTION ================= */}
 
-      <section className="hero">
+<section className="hero">
 
-        <div className="hero-overlay">
+  <div className="hero-overlay">
 
-          {/* HERO BADGE */}
+    <h1 data-aos="zoom-in">
+      Find Your Dream Adventure
+    </h1>
 
-          <div className="hero-badge" data-aos="zoom-in">
-            <Sparkles className="badge-icon" />
-            World's Leading Travel Marketplace
-          </div>
+    <p className="hero-subtitle" data-aos="zoom-in">
+      Compare and book multi-day tours from 2,500+ operators worldwide
+    </p>
 
-          <h1 data-aos="zoom-in">
-            Explore the World <br /> Your Way
-          </h1>
+    {/* SEARCH BAR */}
 
-          <p className="hero-subtitle" data-aos="zoom-in">
-            Compare packages from 200+ verified travel agents and
-            find the perfect trip within your budget
-          </p>
+    <div className="search-box" data-aos="zoom-in">
 
-          {/* SEARCH BAR */}
+      <div className="search-row full">
+        <FaMapMarkerAlt />
+        <input
+          type="text"
+          placeholder="Where do you want to go?"
+          value={destination}
+          onChange={(e) => setDestination(e.target.value)}
+        />
+      </div>
 
-          <div className="hero-search" data-aos="zoom-in">
+      <div className="search-row two-cols">
 
-            <div className="search-item">
-              <FaMapMarkerAlt />
-              <input
-                type="text"
-                placeholder="Where to?"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-              />
-            </div>
-
-            <div className="search-item">
-              <FaCalendarAlt />
-              <input type="date" />
-            </div>
-
-            <div className="search-item">
-              <FaUsers />
-              <input type="number" placeholder="2" />
-            </div>
-
-            <button className="search-btn">
-              <FaSearch /> Search
-            </button>
-
-          </div>
-
-          {/* POPULAR DESTINATIONS */}
-
-          <div className="popular-destinations" data-aos="zoom-in">
-
-            <span>Popular destinations:</span>
-
-            <div className="dest-tags">
-
-              {popularCities.map((city) => (
-                <span
-                  key={city}
-                  className="dest-chip"
-                  onClick={() => setDestination(city)}
-                >
-                  {city}
-                </span>
-              ))}
-
-            </div>
-
-          </div>
-
-          {/* HERO FEATURES */}
-
-          <div className="hero-features" data-aos="zoom-in">
-
-            <div className="feature-pill secure">
-              <FaShieldAlt className="feature-icon" />
-              100% Secure Booking
-            </div>
-
-            <div className="feature-pill verified">
-              <FaUserCheck className="feature-icon" />
-              Verified Agents
-            </div>
-
-            <div className="feature-pill price">
-              <FaBullseye className="feature-icon" />
-              Best Price Match
-            </div>
-
-          </div>
-
+        <div className="search-item">
+          <FaCalendarAlt />
+          <input type="date" placeholder="When?" />
         </div>
 
-      </section>
-
-
-      {/* ================= STATS SECTION ================= */}
-
-      <section className="stats" data-aos="fade-up">
-
-        <div className="stats-container">
-
-          <div className="stat-item">
-            <div className="stat-icon blue">
-              <Globe size={26} />
-            </div>
-            <h3>500+</h3>
-            <p>Travel Packages</p>
-          </div>
-
-          <div className="stat-item">
-            <div className="stat-icon orange">
-              <Users size={26} />
-            </div>
-            <h3>200+</h3>
-            <p>Verified Agents</p>
-          </div>
-
-          <div className="stat-item">
-            <div className="stat-icon green">
-              <Heart size={26} />
-            </div>
-            <h3>50K+</h3>
-            <p>Happy Travelers</p>
-          </div>
-
-          <div className="stat-item">
-            <div className="stat-icon blue">
-              <Star size={26} />
-            </div>
-            <h3>4.8/5</h3>
-            <p>Average Rating</p>
-          </div>
-
+        <div className="search-item">
+          <FaUsers />
+          <input type="number" placeholder="Group size" />
         </div>
 
-      </section>
+      </div>
+
+      <button className="search-main-btn">
+        <FaSearch /> Search Tours
+      </button>
+
+    </div>
+     {/* HERO STATS */}
+     <div className="hero-stats" data-aos="zoom-in">
+
+  <div className="hero-stat">
+    <h3>50,000+</h3>
+    <p>Tours</p>
+  </div>
+
+  <div className="hero-stat">
+    <h3>2,500+</h3>
+    <p>Operators</p>
+  </div>
+
+  <div className="hero-stat">
+    <h3>200+</h3>
+    <p>Countries</p>
+  </div>
+
+  <div className="hero-stat">
+    <h3>1M+</h3>
+    <p>Reviews</p>
+  </div>
+
+</div>
+
+  </div>
+
+</section>
 
 
+{/* ================= STATS SECTION ================= */}
+
+<section className="stats" data-aos="fade-up">
+
+  <div className="stats-container">
+
+    <div className="stat-item">
+      <div className="stat-icon blue">
+        <Globe size={26} />
+      </div>
+      <h3>500+</h3>
+      <p>Travel Packages</p>
+    </div>
+
+    <div className="stat-item">
+      <div className="stat-icon orange">
+        <Users size={26} />
+      </div>
+      <h3>200+</h3>
+      <p>Verified Agents</p>
+    </div>
+
+    <div className="stat-item">
+      <div className="stat-icon green">
+        <Heart size={26} />
+      </div>
+      <h3>50K+</h3>
+      <p>Happy Travelers</p>
+    </div>
+
+    <div className="stat-item">
+      <div className="stat-icon blue">
+        <Star size={26} />
+      </div>
+      <h3>4.8/5</h3>
+      <p>Average Rating</p>
+    </div>
+
+  </div>
+
+</section>
       {/* ================= HOW IT WORKS ================= */}
 
       <section className="how-it-works" data-aos="fade-up">
@@ -567,7 +529,7 @@ function Home() {
                     </button>
 
                     <button className="download-btn">
-                      <Download />
+                      <Heart />
                     </button>
 
                   </div>

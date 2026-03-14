@@ -62,10 +62,6 @@ const Footer = () => {
               Packages
             </a>
 
-            <a href="#">
-              <FaCircle className="dot blue" />
-              Compare
-            </a>
 
             <a href="#">
               <FaCircle className="dot blue" />

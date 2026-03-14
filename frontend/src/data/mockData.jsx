@@ -95,7 +95,9 @@ destination: "Dubai, UAE",
 image: "images/packages/dubai-luxury.jpg",
 
 agentName: "Wanderlust Travels",
+provider: "Wanderlust Travels",
 agentRating: 4.7,
+providerRating: 4.3,
 
 days: "5D/4N",
 people: "Up to 6",
@@ -118,7 +120,9 @@ destination: "Bali, Indonesia",
 image:"images/packages/bali-paradise.jpg" ,
 
 agentName: "Global Adventures",
+provider: " Global Adventures",
 agentRating: 4.8,
+providerRating: 3.6,
 
 days: "7D/6N",
 people: "Up to 4",
@@ -141,7 +145,9 @@ destination: "Maldives",
 image: "images/packages/bali-paradise.jpg",
 
 agentName: "Luxury Escapes",
+provider: "Luxury Escapes",
 agentRating: 4.9,
+providerRating: 4.2,
 
 days: "5D/4N",
 people: "Up to 2",
@@ -164,6 +170,9 @@ destination: "Europe (Paris, Rome, Swiss)",
 image:"images/packages/europe.jpg" ,
 
 agentName: "Wanderlust Travels",
+provider: "Wanderlust Travels",
+providerRating: 5.0,
+
 agentRating: 4.9,
 
 days: "12D/11N",
