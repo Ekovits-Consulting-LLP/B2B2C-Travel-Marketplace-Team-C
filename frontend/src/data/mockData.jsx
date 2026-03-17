@@ -249,3 +249,127 @@ export const mockBookings = [
     paymentStatus: "paid"
   }
 ];
+
+// ===============================
+// DEALS PAGE
+// ===============================
+
+//videos
+export const videos = [
+{
+name: "Lori",
+initials: "LR",
+video: "videos/balloon-travel.mp4",
+thumbnail:"images/videos-thumbnail/european cities.jpg",
+title: "Exploring European Cities"
+},
+
+
+{
+name: "Carol",
+initials: "CK",
+video: "videos/airport.mp4",
+thumbnail: "images/videos-thumbnail/city-explore.jpg",
+title: "City Exploration"
+},
+{
+name: "Paul",
+initials: "PL",
+video: "videos/coastal.mp4",
+thumbnail: "images/videos-thumbnail/coastal.jpg",
+title: "Coastal Travel Journey"
+},
+{
+name: "Lisa",
+initials: "LS",
+video: "videos/road-trip.mp4",
+thumbnail:"images/videos-thumbnail/road-trip.jpg",
+title: "Road Trip Adventure"
+}
+];
+
+//DEALS 
+
+export const deals = [
+{
+title:"10-Day Ultimate Ireland Small Group Tour",
+days:"10 days",
+rating:"4.8",
+reviews:158,
+old:"$3,651",
+price:"$3,103",
+discount:"-15% OFF",
+img:"images/deals/ireland.jpg",
+},
+{
+title:"5-Day Escape to the South West Small-Group Tour from Dublin",
+days:"5 days",
+rating:"4.8",
+reviews:190,
+old:"$1,303",
+price:"$1,173",
+discount:"-10% OFF",
+img:"images/deals/dublin.jpg",
+},
+{
+title:"Highlights of Cliffs of Moher, Ring of Kerry & Ireland's South West",
+days:"5 days",
+rating:"5.0",
+reviews:1,
+old:"$2,450",
+price:"$1,568",
+discount:"-36% OFF",
+img:"images/deals/kerry.jpg",
+},
+{
+title:"Best of UK & Ireland",
+days:"13 days",
+rating:"4.7",
+reviews:423,
+old:"$4,030",
+price:"$3,125",
+discount:"-22% OFF",
+img:"images/deals/uk.jpg",
+}
+];
+
+// WORLD DEALS DATA
+
+export const worldDeals = [
+{
+title: "Europe",
+deals: "4,113 deals",
+discount: "UP TO 53% OFF",
+img:"images/worldwide-deals/europe.jpg",
+},
+{
+title: "Asia",
+deals: "3,767 deals",
+discount: "UP TO 70% OFF",
+img: "images/worldwide-deals/asia.jpg",
+},
+{
+title: "Africa",
+deals: "1,934 deals",
+discount: "UP TO 62% OFF",
+img: "images/worldwide-deals/africa.jpg",
+},
+{
+title: "Australia/Oceania",
+deals: "213 deals",
+discount: "UP TO 30% OFF",
+img: "images/worldwide-deals/australia.jpg",
+},
+{
+title: "Latin America",
+deals: "961 deals",
+discount: "UP TO 50% OFF",
+img: "images/worldwide-deals/latin-america.jpg",
+},
+{
+title: "North America",
+deals: "270 deals",
+discount: "UP TO 40% OFF",
+img: "images/worldwide-deals/north-america.jpg",
+}
+];
