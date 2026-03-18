@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import { Search } from "lucide-react";
 import { MapPin, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import "../styles/newDestination.css";
 
 function NewDestinationsPage() {
 
@@ -189,7 +190,7 @@ const goToDestination = (name) => {
 
         <div className="image-wrap">
 
-          <img src={d.img}/>
+          <img src={d.img} alt={d.name} />
 
           <div className="overlay">
 

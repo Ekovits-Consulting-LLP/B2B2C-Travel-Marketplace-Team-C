@@ -2,11 +2,12 @@ import Navbar from "../components/Navbar";
 import packages from "../data/packages";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
-import {Heart, MapPin, Star, Users, Calendar, Download, Crown, Sparkles, TrendingUp } from "lucide-react";
+import {Heart, MapPin, Star, Users, Calendar,} from "lucide-react";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import "../styles/destination.css";
 
 
 
@@ -393,45 +394,12 @@ return(
         </p>
 
 
-        {/* AGENT */}
-        <div className="agent-row">
-
-  <div className="agent-avatar">
-    {data.agent.charAt(0)}
-  </div>
-
-  <div className="agent-info">
-
-    <p className="agent-name">
-      {data.agent}
-    </p>
-
-    <p className="agent-rating">
-      ⭐ {data.agentRating} rating
-    </p>
-
-  </div>
-
-  <span className="reviews">
-  <span className="review-icon">
-    <TrendingUp size={14} />
-  </span>
-  {data.reviews}
-</span>
-
-</div>
-
         {/* RATING */}
         <div className="rating-box">
 
           <span className="rating-value">
             <Star size={14} className="star filled"/> {data.rating} / 5
           </span>
-
-          <span className="review-text">
-          ({data.reviews} reviews)
-          </span>
-
         </div>
 
 
@@ -447,12 +415,12 @@ return(
             <p className="price">
 
 <span className="new-price">
-${data.price}
+Rs.{data.price}
 </span>
 
 {data.oldPrice && (
 <span className="old-price">
-${data.oldPrice}
+Rs.{data.oldPrice}
 </span>
 )}
 
@@ -472,7 +440,7 @@ ${data.oldPrice}
               You save
 
               <span>
-                ${saveAmount}
+                Rs.{saveAmount}
               </span>
 
             </div>
@@ -485,7 +453,7 @@ ${data.oldPrice}
         <div className="button-row">
 
 <Link to={`/package/${data.id}`} className="details">
-View Details
+Book Now
 </Link>
 
 <button className="bottom-heart">

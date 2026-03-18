@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import "../App.css";
 import { MapPin, Calendar, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import "../styles/packageDetails.css";
 
 function PackageDetails() {
     const navigate = useNavigate();
@@ -62,15 +63,14 @@ className="main-img"
 
 <p className="price-label">Starting from</p>
 
-<h2 className="price">$1599 <span className="old-price">$1899</span></h2>
+<h2 className="price">Rs.1599 <span className="old-price">Rs.1899</span></h2>
 
 <p className="per-person">per person</p>
 
-<div className="save-tag">Save $300</div>
+<div className="save-tag">Save Rs.300</div>
 
 <button className="book-btn">Book Now</button>
 
-<button className="pdf-btn">Download PDF</button>
 
 <div className="action-row">
 
@@ -92,7 +92,7 @@ className="main-img"
 Have questions about this package? Contact our travel experts.
 </p>
 
-<button className="contact-btn">Contact Agent</button>
+<button className="contact-btn">Contact Support</button>
 
 </div>
 
@@ -234,7 +234,6 @@ alt="agent"
 
 <p>⭐ 4.6 rating • 18 packages • 95 bookings</p>
 
-<p>info@globaladventures.com</p>
 
 </div>
 

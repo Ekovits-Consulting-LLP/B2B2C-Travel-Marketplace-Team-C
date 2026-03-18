@@ -1,6 +1,6 @@
 import { Plane, User, Sparkles } from "lucide-react";
-import { NavLink } from "react-router-dom";
 import { useState } from "react";
+import "../styles/navbar.css";
 
 function Navbar() {
   const [activeTab , setActiveTab] = useState("destinations");

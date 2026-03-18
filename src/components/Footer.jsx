@@ -1,5 +1,6 @@
-import { FaPlane, FaHeart } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { Plane} from "lucide-react";
+import "../styles/footer.css";
 
 function Footer() {
   return (

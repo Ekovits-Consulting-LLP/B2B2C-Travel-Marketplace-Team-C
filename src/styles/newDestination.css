@@ -1,0 +1,316 @@
+/* ================= HERO ================= */
+
+.hero{
+height:280px;
+background-color:#2563eb;
+display:flex;
+align-items:center;
+}
+
+.hero-content{
+color:white;
+max-width:100%;
+}
+
+.hero-content h1{
+font-size:46px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.hero-content p{
+opacity:0.9;
+margin-bottom:24px;
+line-height:1.5;
+}
+
+/* SEARCH */
+
+.search-box{
+display:flex;
+background:white;
+padding:6px;
+border-radius:12px;
+width:520px;
+box-shadow:0 8px 25px rgba(0,0,0,0.08);
+}
+
+.search-input{
+display:flex;
+align-items:center;
+flex:1;
+padding-left:12px;
+}
+
+.search-icon{
+color:#9ca3af;
+margin-right:8px;
+}
+
+.search-input input{
+border:none;
+outline:none;
+font-size:14px;
+flex:1;
+padding:12px 0;
+}
+
+.search-box button{
+background:#2563eb;
+color:white;
+border:none;
+padding:12px 24px;
+border-radius:10px;
+cursor:pointer;
+font-weight:600;
+}
+
+
+/* ===== REGION SECTION EXACT ===== */
+
+.regions{
+padding:20px 0 10px 0;   /* 🔥 less bottom space */
+}
+
+.region-container{
+width:1200px;
+margin-left:150px;   /* 🔥 shift whole block left */
+}
+
+.region-title{
+font-size:24px;      
+font-weight:700;
+color:#1e293b;
+margin-bottom:26px;
+margin-left:6px;
+}
+
+/* SINGLE LINE CENTERED */
+
+.region-row{
+display:flex;
+justify-content:space-between;
+gap:18px;   
+}
+
+/* CARD EXACT LOOK */
+
+.region-card{
+background:#f8fafc;
+border:1px solid #e2e8f0;
+border-radius:12px;
+
+width:150px;        /* reduced width */
+padding:5px 14px;  /* reduced height */
+
+text-align:center;
+
+box-shadow:0 2px 6px rgba(0,0,0,0.04);
+transition:0.2s;
+cursor:pointer;
+}
+
+/* TEXT */
+
+.region-card h4{
+font-size:16px;
+font-weight:700;
+color:#1e293b;
+margin-bottom:2px;     /* 🔥 tighter */
+line-height:1.2;
+}
+
+.region-card p{
+font-size:13px;
+font-weight:600;  
+color:#64748b;
+line-height:1.2;
+}
+
+/* HOVER */
+
+.region-card:hover{
+background:#2563eb;
+border-color:#2563eb;
+transform:translateY(-2px);
+}
+
+.region-card:hover h4,
+.region-card:hover p{
+color:white;
+}
+
+/* ===== POPULAR ===== */
+
+.popular-section{
+padding:30px 80px 60px 80px;   /* 🔥 less top gap */
+}
+
+.popular-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:12px;
+}
+
+.popular-header h2{
+font-size:24px;
+font-weight:700;
+color:#1e293b;
+margin-left:0;
+}
+.popular-container{
+width:1200px;
+margin:auto;
+}
+
+.trending{
+display:flex;
+align-items:center;
+gap:6px;
+color:#16a34a;
+font-weight:500;
+font-size:14px;
+margin-right:5px;
+}
+
+/* GRID */
+
+.popular-grid{
+display:grid;
+grid-template-columns:repeat(3, 380px);   /* 🔥 wider cards */
+justify-content:center;
+gap:28px;
+}
+/* CARD */
+
+.popular-card{
+width:380px;
+background:white;
+border-radius:14px;
+overflow:hidden;
+box-shadow:0 2px 6px rgba(0,0,0,0.04),
+0 12px 28px rgba(0,0,0,0.08);
+transition:0.25s;
+}
+
+
+/* IMAGE */
+
+.image-wrap{
+position:relative;
+height:220px;
+overflow:hidden;
+}
+
+.image-wrap img{
+width:100%;
+height:100%;
+object-fit:cover;
+transition:0.4s;
+}
+
+/* ZOOM EFFECT */
+
+.popular-card:hover img{
+transform:scale(1.08);
+}
+
+/* OVERLAY */
+
+.overlay{
+position:absolute;
+bottom:0;
+left:0;
+right:0;
+padding:20px;
+background:linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+color:white;
+}
+
+.overlay h3{
+font-size:22px;
+margin-bottom:6px;
+}
+
+.location{
+display:flex;
+align-items:center;
+gap:6px;
+font-size:14px;
+color:white;        
+}
+.location{
+color:rgba(255,255,255,0.95);
+}
+.location svg{
+color:white;        /* 🔥 icon white */
+}
+
+/* CONTENT */
+
+.card-content{
+padding:14px;
+}
+
+.card-content p{
+font-size:14px;
+color:#475569;
+margin-bottom:16px;
+}
+
+/* FOOTER */
+
+.card-footer{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.tours{
+font-weight:600;
+color:#1e293b;
+font-size:13px;
+}
+
+.explore{
+color:#2563eb;
+font-weight:600;
+font-size:14px;      /* 🔥 reduced size */
+cursor:pointer;
+
+text-decoration:none;
+transition:0.2s;
+}
+.explore:hover{
+text-decoration:underline;   /* 🔥 underline on hover */
+color:#1d4ed8;               /* slightly darker blue */
+}
+
+/* ================= CTA ================= */
+.cta{
+max-width:1100px;     
+margin:20px auto 100px auto;
+padding:60px 50px;    
+
+border-radius:16px;
+background:linear-gradient(90deg,#2563eb,#16a34a);
+color:white;
+text-align:center;
+}
+
+.cta h2{
+font-size:30px;
+margin-bottom:10px;
+}
+
+.cta button{
+margin-top:20px;
+background:white;
+color:#2563eb;
+border:none;
+padding:14px 28px;
+border-radius:10px;
+font-weight:600;
+cursor:pointer;
+}
