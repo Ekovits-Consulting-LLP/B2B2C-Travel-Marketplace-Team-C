@@ -1,25 +1,32 @@
 import React, { useState, useEffect,useRef  } from "react";
 import { MapPin, Calendar, Users, Search, ChevronDown,Star } from "lucide-react";
-import { deals, videos, worldDeals } from "../data/mockData";
+import { deals, reviews , worldDeals,destinations_deal } from "../data/mockData";
 
 
 
 export default function Deals(){
 
 const containerRef = useRef(null);
+const [expandedIndex, setExpandedIndex] = useState(null);
 
 const scrollLeft = () => {
-containerRef.current.scrollBy({
-left: -400,
-behavior: "smooth"
-});
+  if (containerRef.current) {
+    const width = containerRef.current.clientWidth;
+    containerRef.current.scrollBy({
+      left: -width,
+      behavior: "smooth"
+    });
+  }
 };
 
 const scrollRight = () => {
-containerRef.current.scrollBy({
-left: 400,
-behavior: "smooth"
-});
+  if (containerRef.current) {
+    const width = containerRef.current.clientWidth;
+    containerRef.current.scrollBy({
+      left: width,
+      behavior: "smooth"
+    });
+  }
 };
 
 const [time,setTime] = useState(129356);
@@ -45,16 +52,8 @@ const [showTravellers,setShowTravellers] = useState(false);
 const [adults,setAdults] = useState(2);
 const [children,setChildren] = useState(0);
 
-const destinations = [
-{ name:"North America", deal:"up to 40% Off"},
-{ name:"Australia/Oceania", deal:"up to 30% Off"},
-{ name:"India", deal:"up to 70% Off"},
-{ name:"Bhutan", deal:"up to 70% Off"},
-{ name:"Egypt", deal:"up to 62% Off"}
-];
-
 const handleSearch = ()=>{
-alert(`Searching deals for ${destination}`);
+alert(`Searching deals for Rs.{destination}`);
 };
 
 return(
@@ -93,7 +92,7 @@ Save up to 50% on trips to Ireland, England, Scotland
 
 <div className="deals-dropdown">
 
-{destinations.map((d,i)=>(
+{destinations_deal.map((d,i)=>(
 
 <div
 key={i}
@@ -304,62 +303,85 @@ From <span>{d.old}</span>
 </div>
 
 </section>
+ 
+ {/* AUTHENTIC TRAVELLER REVIEWS */}
 
-{/*Authentic Traveller Moments */}
+<section className="veena-reviews">
 
-<section className="moments">
+  {/* TITLE */}
+  <h1 className="vr-title">Authentic Traveller Reviews
+  </h1>
+  <p className="vr-subtitle">
+    What are you waiting for? Chalo Bag Bharo Nikal Pado!
+  </p>
 
-<div className="moments-header">
+  <div className="vr-wrapper">
 
-<h2>Authentic Traveller Moments</h2>
+    {/* LEFT ARROW */}
+    <button className="vr-arrow left" onClick={scrollLeft}>❮</button>
 
-<div className="controls">
+    <div className="vr-container" ref={containerRef}>
+      {reviews.map((item, index) => {
+        const isExpanded = expandedIndex === index;
 
-<button onClick={scrollLeft}>❮</button>
+        return (
+          <div className="vr-card" key={index}>
 
-<button onClick={scrollRight}>❯</button>
+            {/* ⭐ RATING + TAG */}
+            <div className="vr-rating">
+              <Star size={16} className="star-icon" />
+              <span className="vr-rate">5</span>
+              <span className="vr-tag">{item.tag}</span>
+            </div>
 
-<button className="see-more">See More</button>
+            {/* TITLE */}
+            <h3 className="vr-heading">{item.title}</h3>
 
-</div>
+            {/* DESCRIPTION */}
+            <p className={`vr-text ${isExpanded ? "expanded" : ""}`}>
+              "{item.description}"
+            </p>
 
-</div>
+            {/* READ MORE */}
+            <span
+              className="vr-read"
+              onClick={() =>
+                setExpandedIndex(isExpanded ? null : index)
+              }
+            >
+              {isExpanded ? "Read less" : "Read more"}
+            </span>
 
-<div className="video-scroll" ref={containerRef}>
+            {/* FOOTER */}
+            <div className="vr-footer">
 
-{videos.map((item, index) => (
+              <div>
+                <p className="vr-name">{item.name}</p>
+                <span className="vr-date">
+                  Travelled in Mar, 2026
+                </span>
+              </div>
 
-<div className="video-card" key={index}>
+              <div className="vr-manager">
+                <div className="icon-circle">
+                  <Users size={14} />
+                </div>
+                <span>{item.manager}</span>
+              </div>
 
-<video
-poster={item.thumbnail}
-controls
-className="video"
->
+            </div>
 
-<source src={item.video} type="video/mp4" />
+          </div>
+        );
+      })}
+    </div>
 
-</video>
+    {/* RIGHT ARROW */}
+    <button className="vr-arrow right" onClick={scrollRight}>❯</button>
 
-<div className="video-top">
+  </div>
 
-<div className="avatar">{item.initials}</div>
-
-<span>{item.name}</span>
-
-</div>
-
-<div className="video-bottom">
-
-<p>{item.title}</p>
-
-</div>
-
-</div>
-
-))}
-
-</div>
+  <button className="vr-btn">Read more Reviews</button>
 
 </section>
 
@@ -416,9 +438,9 @@ className="video"
 <h4>Adventure at Your Fingertips</h4>
 
 <p>
-The TravelHub mobile app puts adventure in your pocket. Explore thousands of trips,
-receive real-time updates, and manage bookings effortlessly. Your next adventure is just a tap away.
-</p>
+The TravelHub mobile app puts adventure in your pocket. Explore thousands of trips,</p>
+<p>receive real-time updates, and manage bookings effortlessly.</p>
+<p>Your next adventure is just a tap away.</p>
 
 <p className="adventure-sub">
 Download the TravelHub app and enjoy app-exclusive perks:
@@ -426,31 +448,12 @@ Download the TravelHub app and enjoy app-exclusive perks:
 
 <ul className="adventure-list">
 <li>🌍 Book 50,000+ multi-day tours, safaris, river cruises, and more</li>
-<li>🎁 Win up to $3,000 every month in app-only giveaways</li>
+<li>🎁 Win up to Rs.3,000 every month in app-only giveaways</li>
 <li>🔥 Save up to 50% with app-exclusive deals</li>
 </ul>
 
 </div>
 
-{/* RIGHT IMAGE */}
-<div className="adventure-right">
-
-<div className="adventure-card">
-
-<h3>One app<br/>for your entire trip</h3>
-
-<div className="store-buttons">
-
-<img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="appstore"/>
-
-<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="playstore"/>
-
-</div>
-
-
-</div>
-
-</div>
 
 </div>
 

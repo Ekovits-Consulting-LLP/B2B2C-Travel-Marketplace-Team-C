@@ -225,39 +225,51 @@ export const mockBookings = [
 // ===============================
 // DEALS PAGE
 // ===============================
+ //reviews
+export const reviews = [
+  {
+    tag: "Women's Special",
+    title: "Women's Special Bhubaneswar Puri Konark Chilika",
+    description:
+      "AWESOME... We had great time from day 1 till last day.. Our tour manager Sagar Chachad and Vivek Chafekar were very friendly, very enthusiastic and supportive throughout the journey.",
+    name: "Apeksha",
+    manager: "Sagar Chachad, Vivek Chafekar"
+  },
+  {
+    tag: "Women's Special",
+    title: "Women's Special Bhubaneswar Puri Konark Chilika",
+    description:
+      "As it was my first trip with Veena, I was skeptical at first about how it will go. But with each passing day after the booking, I got more confident and the trip turned out to be amazing.",
+    name: "Sayalee",
+    manager: "Sagar Chachad, Vivek Chafekar"
+  },
+  {
+    tag: "Family",
+    title: "Best of Andaman",
+    description:
+      "We had a wonderful experience throughout the trip. Everything was managed so smoothly and professionally, and every small need was taken care of. Truly memorable vacation.",
+    name: "Prachi",
+    manager: "Nimkesh Patil"
+  },
 
-//videos
-export const videos = [
-{
-name: "Lori",
-initials: "LR",
-video: "videos/balloon-travel.mp4",
-thumbnail:"images/videos-thumbnail/european cities.jpg",
-title: "Exploring European Cities"
-},
+  {
+    tag: "Family",
+    title: "Amazing Dubai Experience",
+    description:
+      "The Dubai tour was perfectly organized with great hotel stays and sightseeing. The desert safari and Burj Khalifa visit were highlights of our trip. Everything was hassle-free.",
+    name: "Rohit",
+    manager: "Ankit Sharma"
+  },
 
 
-{
-name: "Carol",
-initials: "CK",
-video: "videos/airport.mp4",
-thumbnail: "images/videos-thumbnail/city-explore.jpg",
-title: "City Exploration"
-},
-{
-name: "Paul",
-initials: "PL",
-video: "videos/coastal.mp4",
-thumbnail: "images/videos-thumbnail/coastal.jpg",
-title: "Coastal Travel Journey"
-},
-{
-name: "Lisa",
-initials: "LS",
-video: "videos/road-trip.mp4",
-thumbnail:"images/videos-thumbnail/road-trip.jpg",
-title: "Road Trip Adventure"
-}
+  {
+    tag: "Women's Special",
+    title: "Kerala Backwaters Delight",
+    description:
+      "Kerala trip was absolutely beautiful with scenic views and peaceful houseboat stay. The tour manager ensured comfort and safety throughout. Highly recommended for relaxing vacation.",
+    name: "Neha",
+    manager: "Pooja Mehta"
+  }
 ];
 
 //DEALS 
@@ -268,8 +280,8 @@ title:"10-Day Ultimate Ireland Small Group Tour",
 days:"10 days",
 rating:"4.8",
 reviews:158,
-old:"$3,651",
-price:"$3,103",
+old:"Rs. 3,651",
+price:"Rs. 3,103",
 discount:"-15% OFF",
 img:"images/deals/ireland.jpg",
 },
@@ -278,8 +290,8 @@ title:"5-Day Escape to the South West Small-Group Tour from Dublin",
 days:"5 days",
 rating:"4.8",
 reviews:190,
-old:"$1,303",
-price:"$1,173",
+old:"Rs. 1,303",
+price:"Rs. 1,173",
 discount:"-10% OFF",
 img:"images/deals/dublin.jpg",
 },
@@ -288,8 +300,8 @@ title:"Highlights of Cliffs of Moher, Ring of Kerry & Ireland's South West",
 days:"5 days",
 rating:"5.0",
 reviews:1,
-old:"$2,450",
-price:"$1,568",
+old:"Rs. 2,450",
+price:"Rs. 1,568",
 discount:"-36% OFF",
 img:"images/deals/kerry.jpg",
 },
@@ -298,8 +310,8 @@ title:"Best of UK & Ireland",
 days:"13 days",
 rating:"4.7",
 reviews:423,
-old:"$4,030",
-price:"$3,125",
+old:"Rs. 4,030",
+price:"Rs. 3,125",
 discount:"-22% OFF",
 img:"images/deals/uk.jpg",
 }
@@ -344,4 +356,14 @@ deals: "270 deals",
 discount: "UP TO 40% OFF",
 img: "images/worldwide-deals/north-america.jpg",
 }
+];
+
+//destinations data for deals page
+export const destinations_deal = [
+{ name:"Anywhere", deal:"up to 70% Off"},
+{ name:"North America", deal:"up to 40% Off"},
+{ name:"Australia/Oceania", deal:"up to 30% Off"},
+{ name:"India", deal:"up to 70% Off"},
+{ name:"Bhutan", deal:"up to 70% Off"},
+{ name:"Egypt", deal:"up to 62% Off"}
 ];
