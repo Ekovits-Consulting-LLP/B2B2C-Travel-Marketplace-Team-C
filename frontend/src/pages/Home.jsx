@@ -38,21 +38,10 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-/* AOS */
-import AOS from "aos";
-import "aos/dist/aos.css";
+
 
 function Home() {
 
-  /* AOS INITIALIZE */
-
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-      easing: "ease-in-out"
-    });
-  }, []);
 
   /* STATE */
 
@@ -71,17 +60,17 @@ function Home() {
 
   <div className="hero-overlay">
 
-    <h1 data-aos="zoom-in">
+    <h1 >
       Find Your Dream Adventure
     </h1>
 
-    <p className="hero-subtitle" data-aos="zoom-in">
+    <p className="hero-subtitle" >
       Compare and book multi-day tours from 2,500+ operators worldwide
     </p>
 
     {/* SEARCH BAR */}
 
-    <div className="search-box" data-aos="zoom-in">
+    <div className="search-box" >
 
       <div className="search-row full">
         <FaMapMarkerAlt />
@@ -113,7 +102,7 @@ function Home() {
 
     </div>
      {/* HERO STATS */}
-     <div className="hero-stats" data-aos="zoom-in">
+     <div className="hero-stats" >
 
   <div className="hero-stat">
     <h3>50,000+</h3>
@@ -144,7 +133,7 @@ function Home() {
 
 {/* ================= STATS SECTION ================= */}
 
-<section className="stats" data-aos="fade-up">
+<section className="stats" >
 
   <div className="stats-container">
 
@@ -185,7 +174,7 @@ function Home() {
 </section>
       {/* ================= HOW IT WORKS ================= */}
 
-      <section className="how-it-works" data-aos="fade-up">
+      <section className="how-it-works">
 
         <div className="container-custom">
 
@@ -193,7 +182,7 @@ function Home() {
 
           <h2 className="how-title">Book Your Trip in 3 Easy Steps</h2>
 
-          <div className="steps-container" data-aos="zoom-in">
+          <div className="steps-container" >
 
             {/* STEP 1 */}
 
@@ -264,7 +253,7 @@ function Home() {
 
       {/* ================= TRENDING DESTINATIONS ================= */}
 
-      <section className="destinations" data-aos="fade-up">
+      <section className="destinations" >
 
         <div className="dest-header">
 
@@ -282,7 +271,7 @@ function Home() {
 
           {destinations.map((dest, index) => (
 
-            <div className="dest-card" key={index} data-aos="zoom-in">
+            <div className="dest-card" key={index}>
 
               <img src={dest.image} alt={dest.name} />
 
@@ -319,7 +308,7 @@ function Home() {
 
       {/* ================= FEATURED PACKAGES ================= */}
 
-      <section className="packages-section" data-aos="fade-up">
+      <section className="packages-section">
 
         {/* HEADER */}
 
@@ -371,7 +360,7 @@ function Home() {
 
               {/* CARD */}
 
-              <div className="travel-card" data-aos="zoom-in">
+              <div className="travel-card">
 
                 {/* IMAGE */}
 
@@ -572,7 +561,7 @@ function Home() {
 
         </div>
 
-        <div className="why-cards" data-aos="zoom-in">
+        <div className="why-cards" >
 
           <div className="why-card">
 
@@ -625,7 +614,7 @@ function Home() {
 
       <section className="cta-section">
 
-        <div className="cta-container" data-aos="zoom-in">
+        <div className="cta-container" >
 
           <h2>Ready to Start Your Journey?</h2>
 
