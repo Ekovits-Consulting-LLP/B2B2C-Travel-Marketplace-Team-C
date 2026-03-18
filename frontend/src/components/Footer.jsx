@@ -1,11 +1,8 @@
 import React from "react";
+import "../styles/Footer.css";
 import {
   FaCircle,
-  FaHeart,
-  FaFacebookF,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedinIn
+  FaHeart
 } from "react-icons/fa";
 import { Plane} from "lucide-react";
 

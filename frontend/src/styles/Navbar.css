@@ -1,0 +1,349 @@
+
+/* ===============================
+NAVBAR
+=============================== */
+
+/* NAVBAR */
+
+.navbar{
+width:100%;
+display:flex;
+align-items:center;
+
+
+padding:14px 70px;
+
+background:white;
+border-bottom:1px solid #e5e7eb;
+
+position:relative;
+font-family:system-ui, Arial, sans-serif;
+}
+
+/* LEFT */
+
+.nav-left{
+display:flex;
+align-items:center;
+gap:12px;
+cursor:pointer;
+flex:1;
+}
+
+/* LOGO BOX */
+
+.logo-box{
+width:44px;
+height:44px;
+
+background:#2563eb;
+border-radius:10px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+color:white;
+position:relative;
+}
+
+/* SPARKLE BADGE */
+
+.sparkle-badge{
+position:absolute;
+top:-4px;
+right:-4px;
+
+width:18px;
+height:18px;
+
+background:#f97316;
+border-radius:50%;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+color:white;
+}
+
+/* LOGO TEXT */
+
+.logo-text{
+display:flex;
+flex-direction:column;
+line-height:1.1;
+}
+
+.logo-title{
+font-size:18px;
+font-weight:600;
+color:#111827;
+}
+
+.logo-subtitle{
+font-size:12px;
+color:#6b7280;
+}
+
+/* CENTER NAV */
+.nav-center{
+display:flex;
+justify-content:center;
+gap:40px;
+flex:1;
+}
+
+.nav-link{
+font-size:15px;
+color:#374151;
+text-decoration:none;
+cursor:pointer;
+padding-bottom:6px;
+}
+
+.nav-link.active{
+color:#2563eb;
+border-bottom:2px solid #2563eb;
+}
+
+/* RIGHT */
+
+.nav-right{
+display:flex;
+align-items:center;
+justify-content:flex-end;
+gap:20px;
+flex:1;
+
+}
+
+/* ACCOUNT */
+
+.account{
+display:flex;
+align-items:center;
+gap:6px;
+color:#374151;
+cursor:pointer;
+}
+
+/* BUTTONS */
+
+.agent-btn{
+display:flex;
+align-items:center;
+gap:6px;
+
+border:1px solid #22c55e;
+background:white;
+color:#16a34a;
+
+padding:8px 14px;
+border-radius:8px;
+
+cursor:pointer;
+font-size:14px;
+}
+
+.agent-btn:hover{
+background:#f0fdf4;
+}
+
+.login-btn{
+background:#f97316;
+border:none;
+color:white;
+
+padding:8px 16px;
+border-radius:8px;
+
+cursor:pointer;
+font-size:14px;
+}
+
+.login-btn:hover{
+background:#ea580c;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+.navbar{
+padding:14px 25px;
+}
+
+.nav-center{
+display:none;
+}
+
+}
+/* ===============================
+NAVBAR SECTION
+=============================== */
+
+.navbar{
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+padding:14px 60px;
+background:white;
+border-bottom:1px solid #e5e7eb;
+
+font-family:system-ui;
+}
+
+/* LEFT */
+
+.nav-left{
+display:flex;
+align-items:center;
+gap:12px;
+cursor:pointer;
+}
+
+.logo-box{
+width:44px;
+height:44px;
+background:#2563eb;
+border-radius:10px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+color:white;
+}
+
+.logo-text{
+display:flex;
+flex-direction:column;
+line-height:1.1;
+}
+
+.logo-title{
+font-weight:600;
+font-size:18px;
+color:#111827;
+}
+
+.logo-subtitle{
+font-size:12px;
+color:#6b7280;
+}
+
+/* CENTER */
+
+.nav-center{
+display:flex;
+gap:40px;
+}
+
+.nav-link{
+font-size:15px;
+color:#374151;
+text-decoration:none;
+cursor:pointer;
+padding-bottom:6px;
+}
+
+.nav-link.active{
+color:#2563eb;
+border-bottom:2px solid #2563eb;
+}
+
+
+/* RIGHT */
+
+.nav-right{
+display:flex;
+align-items:center;
+gap:20px;
+}
+
+.account{
+display:flex;
+align-items:center;
+gap:6px;
+color:#374151;
+cursor:pointer;
+}
+
+/* BUTTONS */
+
+.agent-btn{
+display:flex;
+align-items:center;
+gap:6px;
+
+border:1px solid #22c55e;
+background:white;
+color:#16a34a;
+
+padding:8px 14px;
+border-radius:8px;
+
+cursor:pointer;
+font-size:14px;
+}
+
+.agent-btn:hover{
+background:#f0fdf4;
+}
+
+.login-btn{
+background:#f97316;
+border:none;
+color:white;
+
+padding:8px 16px;
+border-radius:8px;
+
+cursor:pointer;
+font-size:14px;
+}
+
+.login-btn:hover{
+background:#ea580c;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+.nav-center{
+display:none;
+}
+
+.navbar{
+padding:14px 20px;
+}
+
+}
+
+/* -------- Mobile -------- */
+
+@media (max-width:768px){
+
+/* Navbar */
+
+.navbar{
+padding:14px 20px;
+}
+
+.nav-right{
+gap:10px;
+}
+
+.agent-btn{
+padding:6px 10px;
+font-size:12px;
+}
+
+.login-btn{
+padding:6px 12px;
+font-size:12px;
+}
+}

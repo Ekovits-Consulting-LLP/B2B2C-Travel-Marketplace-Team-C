@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "../styles/Home.css";
 
 /* DATA */
 import { mockPackages, destinations } from "../data/mockData";

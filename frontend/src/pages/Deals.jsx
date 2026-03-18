@@ -1,4 +1,5 @@
 import React, { useState, useEffect,useRef  } from "react";
+import "../styles/Deals.css";
 import { MapPin, Calendar, Users, Search, ChevronDown,Star } from "lucide-react";
 import { deals, reviews , worldDeals,destinations_deal } from "../data/mockData";
 
