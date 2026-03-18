@@ -94,16 +94,12 @@ title: "Dubai Luxury Experience",
 destination: "Dubai, UAE",
 image: "images/packages/dubai-luxury.jpg",
 
-agentName: "Wanderlust Travels",
-provider: "Wanderlust Travels",
-agentRating: 4.7,
-providerRating: 4.3,
 
 days: "5D/4N",
 people: "Up to 6",
 
 rating: 4.7,
-reviews: 89,
+
 
 price: 1299,
 oldPrice: 1599,
@@ -119,16 +115,11 @@ title: "Bali Paradise Retreat",
 destination: "Bali, Indonesia",
 image:"images/packages/bali-paradise.jpg" ,
 
-agentName: "Global Adventures",
-provider: " Global Adventures",
-agentRating: 4.8,
-providerRating: 3.6,
 
 days: "7D/6N",
 people: "Up to 4",
 
 rating: 4.8,
-reviews: 124,
 
 price: 899,
 oldPrice: 1199,
@@ -144,16 +135,11 @@ title: "Maldives Luxury Honeymoon",
 destination: "Maldives",
 image: "images/packages/bali-paradise.jpg",
 
-agentName: "Luxury Escapes",
-provider: "Luxury Escapes",
-agentRating: 4.9,
-providerRating: 4.2,
 
 days: "5D/4N",
 people: "Up to 2",
 
 rating: 4.9,
-reviews: 78,
 
 price: 2499,
 oldPrice: 2999,
@@ -169,17 +155,11 @@ title: "European Dream Tour",
 destination: "Europe (Paris, Rome, Swiss)",
 image:"images/packages/europe.jpg" ,
 
-agentName: "Wanderlust Travels",
-provider: "Wanderlust Travels",
-providerRating: 5.0,
-
-agentRating: 4.9,
-
 days: "12D/11N",
 people: "Up to 10",
 
 rating: 4.9,
-reviews: 156,
+
 
 price: 3499,
 oldPrice: 3999,
@@ -191,11 +171,6 @@ trend: 156
 
 {
 id: "pkg-5",
-agentName: "Budget Getaways",
-provider: "Budget Getaways",
-providerRating: 4.3,
-trending: 44,
-
 title: "Goa Beach Holiday",
 destination: "Goa, India",
 
@@ -207,11 +182,8 @@ days: "4D/3N",
 people: "Up to 5",
 
 rating: 4.2,
-reviews: 93,
 
 image: "images/packages/goaa.jpg",
-
-featured: false,
 discount: 10
 }
 

@@ -286,7 +286,7 @@ function Home() {
                   </span>
 
                   <button className="view-deals">
-                    $ View Deals
+                    View Deals
                   </button>
 
                 </div>
@@ -420,35 +420,6 @@ function Home() {
                   </p>
 
 
-                  {/* PROVIDER */}
-
-                  <div className="provider">
-
-                    <div className="provider-left">
-
-                      <div className="provider-icon">
-                        {(pkg.provider || pkg.agentName)?.charAt(0)}
-                      </div>
-
-                      <div>
-
-                        <p className="provider-name">
-                          {pkg.provider}
-                        </p>
-
-                        <p className="provider-rating">
-                          ⭐ {pkg.providerRating} rating
-                        </p>
-
-                      </div>
-
-                    </div>
-
-                    <div className="trend">
-                      ↗ {pkg.trending}
-                    </div>
-
-                  </div>
 
 
                   {/* RATING */}
@@ -461,9 +432,6 @@ function Home() {
 
                     <span className="rating-value">/ 5</span>
 
-                    <span className="reviews">
-                      ({pkg.reviews} reviews)
-                    </span>
 
                   </div>
 
@@ -481,11 +449,11 @@ function Home() {
                       <div className="price-row">
 
                         <span className="price">
-                          ${pkg.price}
+                          Rs. {pkg.price}
                         </span>
 
                         <span className="old-price">
-                          ${pkg.oldPrice}
+                          Rs. {pkg.oldPrice}
                         </span>
 
                       </div>
@@ -501,7 +469,7 @@ function Home() {
                       <p>You save</p>
 
                       <span className="save">
-                        ${pkg.save}
+                        Rs. {pkg.save}
                       </span>
 
                     </div>
@@ -514,7 +482,7 @@ function Home() {
                   <div className="card-buttons">
 
                     <button className="details-btn">
-                      View Details
+                      Book Now
                     </button>
 
                     <button className="download-btn">
