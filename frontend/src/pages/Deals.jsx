@@ -1,7 +1,7 @@
 import React, { useState, useEffect,useRef  } from "react";
 import "../styles/Deals.css";
 import { MapPin, Calendar, Users, Search, ChevronDown,Star } from "lucide-react";
-import { deals, reviews , worldDeals,destinations_deal } from "../data/mockData";
+import { deals, cust_reviews , worldDeals,destinations_deal } from "../data/mockData";
 
 
 
@@ -284,7 +284,7 @@ See All Tours
 <Star size={14} fill="#f59e0b" color="#f59e0b"/>
 
 <span className="deals-reviews">
-({d.reviews})
+({d.cust_reviews})
 </span>
 
 </p>
@@ -322,7 +322,7 @@ From <span>{d.old}</span>
     <button className="vr-arrow left" onClick={scrollLeft}>❮</button>
 
     <div className="vr-container" ref={containerRef}>
-      {reviews.map((item, index) => {
+      {cust_reviews.map((item, index) => {
         const isExpanded = expandedIndex === index;
 
         return (

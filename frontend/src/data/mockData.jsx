@@ -367,3 +367,98 @@ export const destinations_deal = [
 { name:"Bhutan", deal:"up to 70% Off"},
 { name:"Egypt", deal:"up to 62% Off"}
 ];
+
+// ===============================
+// REVIEWS PAGE
+// ===============================
+
+
+export const cust_reviews = [
+{
+name:"Sarah Mitchell",
+date:"February 2026",
+tour:"Ultimate European Adventure",
+title:"Absolutely unforgettable experience!",
+text:"This tour exceeded all my expectations. From the moment we met our guide Jacques in Paris, everything was perfectly organized. The hotels were centrally located and comfortable, and the balance between guided activities and free time was just right. The highlight for me was definitely the Sagrada Familia in Barcelona – our guide’s passion for architecture made it even more special.",
+initials:"SM",
+rating:5,
+image:"images/cust_review/SM.jpg"
+},
+
+{
+name:"Michael Rodriguez",
+date:"January 2026",
+tour:"Ultimate European Adventure",
+title:"Great tour with minor issues",
+text:"Overall a fantastic experience! The itinerary covered all the major sights without feeling rushed. Our guide was knowledgeable and friendly. The only reason I'm not giving 5 stars is that one of our hotels in Rome was a bit dated and the breakfast options were limited. However, the tour company was very responsive when we mentioned it.",
+initials:"MR",
+rating:4,
+image:"images/cust_review/MR.jpg"
+},
+
+{
+name:"Emily Chen",
+date:"December 2025",
+tour:"Asian Highlights Tour",
+title:"Perfect first-time Asia trip!",
+text:"As someone who had never been to Asia before, this tour was the perfect introduction. I was initially worried about traveling alone, but the group was so welcoming. The pace was just right – busy enough to see everything but with enough downtime to rest. The included meals were delicious and gave us a taste of authentic local cuisine.",
+initials:"EC",
+rating:5,
+image:"images/cust_review/EC.jpg"
+},
+
+{
+name:"James Thompson",
+date:"November 2025",
+tour:"South American Explorer",
+title:"Exceeded expectations in every way",
+text:"My wife and I have been on many tours, and this one ranks among the best. The attention to detail was impressive – from the skip-the-line tickets at major attractions to the carefully selected restaurants. The group dynamics were excellent, and we made friends we’re still in touch with. Worth every penny!",
+initials:"JT",
+rating:5,
+image:"images/cust_review/JT.jpg"
+},
+
+{
+name:"Lisa Patel",
+date:"October 2025",
+tour:"Mediterranean Discovery",
+title:"Wonderful tour, highly recommend",
+text:"This was my dream trip and it didn't disappoint! The itinerary was well-paced and covered all the must-see sights. Our guide was fantastic – entertaining, informative, and always ready to help. I especially loved the small group size which made everything more personal.",
+initials:"LP",
+rating:4,
+image:"images/cust_review/LP.jpg"
+},
+
+{
+name:"David Kim",
+date:"September 2025",
+tour:"African Safari Adventure",
+title:"Once in a lifetime experience",
+text:"The safari was absolutely breathtaking. Seeing wildlife in their natural habitat was something I'll never forget. Our guide's knowledge of animal behavior was incredible and made every game drive exciting. The accommodations were luxurious and the food was outstanding.",
+initials:"DK",
+rating:5,
+image:"images/cust_review/DK.jpg"
+},
+
+{
+name:"Rachel Green",
+date:"August 2025",
+tour:"Scandinavian Wonders",
+title:"Beautiful scenery and amazing culture",
+text:"Scandinavia was stunning! From the fjords in Norway to the design culture in Copenhagen, every day brought new wonders. The tour was well-organized with excellent hotels and knowledgeable guides. The Northern Lights viewing was the cherry on top. Highly recommend for nature lovers.",
+initials:"RG",
+rating:5,
+image:"images/cust_review/RC.jpg"
+},
+
+{
+name:"Tom Wilson",
+date:"July 2025",
+tour:"Australian Outback Expedition",
+title:"Great adventure with amazing landscapes",
+text:"The Australian outback is truly spectacular. Our tour covered Uluru, the Great Barrier Reef, and Sydney – an amazing mix of natural wonders and city life. The only minor complaint was that some days felt a bit rushed. But overall, an incredible experience with a great group of fellow travelers.",
+initials:"TW",
+rating:4,
+image:"images/cust_review/TW.jpg"
+}
+];
