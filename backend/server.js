@@ -617,14 +617,26 @@ app.delete('/api/admin/agents/:id', async (req, res) => {
 
 app.post('/api/bookings', async (req, res) => {
     try {
-        const { package_id, customer_name, email, travelers, travel_date } = req.body;
+        const { package_id, customer_name, email, phone, address, city, country, age, travelers, travel_date, additional_travelers } = req.body;
 
         const booking = await db.query(
             `INSERT INTO bookings 
-            (package_id, customer_name, email, travelers, travel_date, status) 
-            VALUES ($1,$2,$3,$4,$5,'confirmed')
+            (package_id, customer_name, email, phone, address, city, country, age, travelers, travel_date, additional_travelers, status) 
+            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,'confirmed')
             RETURNING *`,
-            [package_id, customer_name, email, travelers || 1, travel_date || null]
+            [
+              package_id,
+              customer_name,
+              email,
+              phone || null,
+              address || null,
+              city || null,
+              country || null,
+              age || null,
+              travelers || 1,
+              travel_date || null,
+              additional_travelers ? JSON.stringify(additional_travelers) : null
+            ]
         );
 
         res.json(booking.rows[0]);
@@ -637,13 +649,40 @@ app.post('/api/bookings', async (req, res) => {
 
 app.get('/api/bookings', async (req, res) => {
     try {
-        const result = await db.query(`
+        const { email, customer_name, package_id } = req.query;
+
+        let query = `
             SELECT b.*, p.title as package_title, p.agent_id, u.full_name AS agent_name 
             FROM bookings b
             JOIN packages p ON b.package_id = p.id
             LEFT JOIN users u ON p.agent_id = u.id
-            ORDER BY b.created_at DESC
-        `);
+        `;
+
+        const conditions = [];
+        const params = [];
+
+        if (email) {
+            params.push(email.toLowerCase().trim());
+            conditions.push(`LOWER(b.email) = $${params.length}`);
+        }
+
+        if (customer_name) {
+            params.push(customer_name.toLowerCase().trim());
+            conditions.push(`LOWER(b.customer_name) = $${params.length}`);
+        }
+
+        if (package_id) {
+            params.push(package_id);
+            conditions.push(`b.package_id = $${params.length}`);
+        }
+
+        if (conditions.length > 0) {
+            query += ` WHERE ${conditions.join(' AND ')}`;
+        }
+
+        query += ` ORDER BY b.created_at DESC`;
+
+        const result = await db.query(query, params);
 
         res.json(result.rows);
     } catch (err) {
@@ -654,24 +693,34 @@ app.get('/api/bookings', async (req, res) => {
 
 app.get('/api/agent/bookings', async (req,res)=>{
     try{
-        const { agent_id, package_id } = req.query;
-
-        if(!agent_id){
-            return res.status(400).json({message:'agent_id is required'});
-        }
+        const { agent_id, package_id, status } = req.query;
 
         let query = `
             SELECT b.*, p.title as package_title
             FROM bookings b
             JOIN packages p ON b.package_id = p.id
-            WHERE p.agent_id = $1
         `;
 
-        const params = [agent_id];
+        const conditions = [];
+        const params = [];
 
-        if(package_id){
-            query += ` AND b.package_id = $2`;
+        if (agent_id) {
+            params.push(agent_id);
+            conditions.push(`p.agent_id = $${params.length}`);
+        }
+
+        if (package_id) {
             params.push(package_id);
+            conditions.push(`b.package_id = $${params.length}`);
+        }
+
+        if (status) {
+            params.push(status);
+            conditions.push(`b.status = $${params.length}`);
+        }
+
+        if (conditions.length > 0) {
+            query += ` WHERE ${conditions.join(' AND ')}`;
         }
 
         query += ` ORDER BY b.created_at DESC`;
@@ -683,6 +732,50 @@ app.get('/api/agent/bookings', async (req,res)=>{
     } catch(err){
         console.error(err);
         res.status(500).json({message:"Error fetching bookings"});
+    }
+});
+
+console.log('Registering route GET /api/bookings/:id/receipt');
+app.get('/api/bookings/:id/receipt', async (req, res) => {
+    try {
+        const bookingId = req.params.id;
+        const bookingRes = await db.query(`SELECT b.*, p.title as package_title, p.destination, p.days, p.nights, p.price as package_price FROM bookings b JOIN packages p ON b.package_id = p.id WHERE b.id = $1`, [bookingId]);
+
+        if (bookingRes.rows.length === 0) {
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+
+        const booking = bookingRes.rows[0];
+
+        const additionalTravelerText = booking.additional_travelers ? JSON.parse(booking.additional_travelers).map((t, i) => `  ${i + 2}. ${t.firstName} ${t.lastName} (Age: ${t.age})`).join('\n') : 'None';
+
+        const content = `TravelHub Receipt\n` +
+            `-----------------------------\n` +
+            `Booking ID: ${booking.id}\n` +
+            `Customer: ${booking.customer_name}\n` +
+            `Email: ${booking.email || 'N/A'}\n` +
+            `Phone: ${booking.phone || 'N/A'}\n` +
+            `Address: ${booking.address || 'N/A'}\n` +
+            `City: ${booking.city || 'N/A'}\n` +
+            `Country: ${booking.country || 'N/A'}\n` +
+            `Customer Age: ${booking.age || 'N/A'}\n` +
+            `Package: ${booking.package_title}\n` +
+            `Destination: ${booking.destination}\n` +
+            `Duration: ${booking.days || 'N/A'} days / ${booking.nights || 'N/A'} nights\n` +
+            `Travel Date: ${booking.travel_date ? new Date(booking.travel_date).toLocaleDateString() : 'N/A'}\n` +
+            `Traveler Count: ${booking.travelers || 1}\n` +
+            `Additional Travelers:\n${additionalTravelerText}\n` +
+            `Status: ${booking.status}\n` +
+            `Package Price (per person): ₹${booking.package_price}\n` +
+            `Total Amount: ₹${Number(booking.package_price) * Number(booking.travelers || 1)}\n` +
+            `Booked At: ${new Date(booking.created_at).toLocaleString()}\n`;
+
+        res.setHeader('Content-Type', 'text/plain');
+        res.setHeader('Content-Disposition', `attachment; filename="booking-receipt-${booking.id}.txt"`);
+        res.send(content);
+    } catch (err) {
+        console.error('Receipt error', err);
+        res.status(500).json({ message: 'Error generating receipt' });
     }
 });
 
@@ -1769,6 +1862,16 @@ app.get('/api/diagnostic/uploads-files', async (req, res) => {
         });
     }
 });
+
+console.log('app._router exists:', !!app._router);
+console.log('app._router.stack length:', app._router?.stack?.length);
+if (app._router?.stack) {
+    app._router.stack.forEach((layer, idx) => {
+        const path = layer.route ? layer.route.path : (layer.name || 'unknown');
+        const methods = layer.route ? Object.keys(layer.route.methods).join(', ') : '';
+        console.log(`route[${idx}]`, path, methods);
+    });
+}
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

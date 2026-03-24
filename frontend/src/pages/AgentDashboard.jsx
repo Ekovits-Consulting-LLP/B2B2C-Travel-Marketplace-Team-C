@@ -33,6 +33,7 @@ const [agentUser,setAgentUser] = useState(null);
 const [bookings,setBookings] = useState([]);
 const [agentPhoto,setAgentPhoto] = useState(null);
 const [companyLogo,setCompanyLogo] = useState(null);
+const [bookingPackageFilter,setBookingPackageFilter] = useState('');
 
 const [profile,setProfile] = useState({
 agency_name:'',
@@ -70,11 +71,8 @@ address: user.address || ''
 setAgentPhoto(user.agent_photo || null);
 setCompanyLogo(user.company_logo || null);
 
-if(activeTab === 'packages' || activeTab === 'dashboard'){
+if(activeTab === 'packages' || activeTab === 'dashboard' || activeTab === 'bookings'){
 fetchMyPackages(user.id);
-}
-
-if(activeTab === 'bookings'){
 fetchBookings(user.id);
 }
 
@@ -195,13 +193,16 @@ const fetchBookings = async(agentId)=>{
 
 try{
 
-const res = await fetch(`/api/agent/bookings?agent_id=${agentId}`);
+const query = agentId ? `?agent_id=${agentId}` : '';
+const res = await fetch(`/api/agent/bookings${query}`);
 
 if(res.ok){
 
 const data = await res.json();
 setBookings(data);
 
+} else {
+console.error('Booking fetch response error', res.status, res.statusText);
 }
 
 }catch(err){
@@ -657,7 +658,7 @@ const renderBookings = () => {
 
 <tbody>
 
-{bookings.length === 0 ? (
+{filteredBookings.length === 0 ? (
 
 <tr>
 <td colSpan="6" style={{textAlign:'center',padding:'20px'}}>
@@ -667,7 +668,7 @@ No bookings yet
 
 ) : (
 
-bookings.map(b => (
+filteredBookings.map(b => (
 
 <tr key={b.id}>
 
@@ -680,7 +681,7 @@ bookings.map(b => (
 </div>
 </td>
 
-<td>{b.title}</td>
+<td>{b.package_title}</td>
 
 <td>{new Date(b.travel_date).toLocaleDateString()}</td>
 

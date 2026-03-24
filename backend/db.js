@@ -91,11 +91,43 @@ const initDb = async () => {
         package_id INTEGER REFERENCES packages(id) ON DELETE CASCADE,
         customer_name VARCHAR(100),
         email VARCHAR(100),
+        phone VARCHAR(30),
+        address TEXT,
+        city VARCHAR(100),
+        country VARCHAR(100),
+        age INTEGER,
         travelers INTEGER,
         travel_date DATE,
+        additional_travelers JSONB,
         status VARCHAR(20) DEFAULT 'confirmed',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+    `);
+
+    // Ensure schema updates for existing DB
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'bookings' AND column_name = 'phone') THEN
+          ALTER TABLE bookings ADD COLUMN phone VARCHAR(30);
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'bookings' AND column_name = 'address') THEN
+          ALTER TABLE bookings ADD COLUMN address TEXT;
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'bookings' AND column_name = 'city') THEN
+          ALTER TABLE bookings ADD COLUMN city VARCHAR(100);
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'bookings' AND column_name = 'country') THEN
+          ALTER TABLE bookings ADD COLUMN country VARCHAR(100);
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'bookings' AND column_name = 'age') THEN
+          ALTER TABLE bookings ADD COLUMN age INTEGER;
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'bookings' AND column_name = 'additional_travelers') THEN
+          ALTER TABLE bookings ADD COLUMN additional_travelers JSONB;
+        END IF;
+      END;
+      $$;
     `);
 
     // Create default admin if not exists

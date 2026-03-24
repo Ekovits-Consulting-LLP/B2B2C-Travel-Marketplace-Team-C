@@ -14,6 +14,8 @@ const BookPackage = () => {
   const [travelerCount, setTravelerCount] = useState(2);
   const [additionalTravelers, setAdditionalTravelers] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [lastBookingId, setLastBookingId] = useState(null);
+  const [bookingComplete, setBookingComplete] = useState(false);
 
   useEffect(() => {
     fetch(`/api/packages/${id}`)
@@ -69,22 +71,52 @@ const BookPackage = () => {
           package_id: Number(id),
           customer_name: `${traveler.firstName} ${traveler.lastName}`,
           email: traveler.email,
+          phone: traveler.phone,
+          address: traveler.address,
+          city: traveler.city,
+          country: traveler.country,
+          age: traveler.age,
           travelers: travelerCount,
-          travel_date: travelDate
+          travel_date: travelDate,
+          additional_travelers: additionalTravelers
         })
       });
       if (!res.ok) {
         const errData = await res.json();
         throw new Error(errData.message || "Booking failed");
       }
-      await res.json();
-      alert("Booking successful! Thank you for your order.");
-      navigate("/");
+      const booking = await res.json();
+      setLastBookingId(booking.id);
+      setBookingComplete(true);
+      setStep(3);
+      alert("Booking successful! Your receipt is ready to download.");
     } catch (err) {
       console.error(err);
       alert("Unable to complete booking. Please try again.");
     }
     setIsSubmitting(false);
+  };
+
+  const downloadReceipt = async (bookingId) => {
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}/receipt`);
+      if (!res.ok) {
+        throw new Error('Receipt download failed');
+      }
+      const text = await res.text();
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `booking-receipt-${bookingId}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Receipt download error', err);
+      alert('Could not download receipt. Please try again.');
+    }
   };
 
   const resetTravelerCount = (newCount) => {
@@ -308,6 +340,15 @@ const BookPackage = () => {
             <span>Total amount</span>
             <span style={{ color: "#2563eb" }}>₹{Number((pkg.final_price || pkg.price) * travelerCount * 1.1).toLocaleString('en-IN')}</span>
           </div>
+
+          {bookingComplete && lastBookingId && (
+            <div style={{ marginTop: '20px', textAlign: 'center' }}>
+              <button onClick={() => downloadReceipt(lastBookingId)} style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer' }}>
+                Download Receipt
+              </button>
+            </div>
+          )}
+
         </div>
       </div>
     </div>

@@ -142,7 +142,11 @@ const minutes = Math.floor((time%3600)/60);
 const seconds = time%60;
 
 const handleSearch = ()=>{
-alert(`Searching deals for ${destination}`);
+if(destination && destination !== "Select Continent or Country"){
+  navigate(`/packagespecific/${encodeURIComponent(destination)}`, { state: { destination } });
+}else{
+  navigate(`/packagespecific`, { state: { destination: "" } });
+}
 };
 
 return(
@@ -186,6 +190,7 @@ className="deals-dropdown-item"
 onClick={(e)=>{
 e.stopPropagation();
 setDestination(d.name);
+setSelectedContinent(d.name);
 setShowDest(false);
 }}
 >
@@ -522,7 +527,10 @@ onClick={()=>setExpandedIndex(isExpanded ? null : index)}
 <div className="world-grid">
 
 {worldDeals.map((item,index)=>(
-<div className="world-card" key={index} onClick={() => setSelectedContinent(item.title)} style={{cursor: 'pointer'}}>
+<div className="world-card" key={index} onClick={() => {
+  setSelectedContinent(item.title);
+  setDestination(item.title);
+}} style={{cursor: 'pointer'}}>
 
 <img src={item.img} alt={item.title}/>
 

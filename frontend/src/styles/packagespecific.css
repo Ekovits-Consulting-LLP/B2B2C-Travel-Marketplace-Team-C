@@ -18,12 +18,14 @@ margin-bottom:20px;
 
 .hero-search{
 background:white;
-padding:6px;
-border-radius:12px;
+padding:18px 20px;
+border-radius:10px;
 display:flex;
-gap:8px;
+gap:10px;
 margin-top:10px;
 align-items:center;
+box-shadow:0 20px 40px rgba(0,0,0,0.16);
+border:1px solid #e5e7eb;
 }
 
 .package-search-input{
