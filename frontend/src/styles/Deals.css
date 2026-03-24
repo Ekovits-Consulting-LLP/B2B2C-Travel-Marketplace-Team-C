@@ -1,0 +1,981 @@
+* {
+  scroll-behavior: auto !important;
+}
+
+/* =================================
+DEALS PAGE GLOBAL
+================================= */
+
+/* HERO */
+
+.deals-hero{
+height:420px;
+background:url("/images/deals/deal-cover.jpg") center/cover no-repeat;
+display:flex;
+align-items:center;
+position:relative;
+}
+.deals-hero-overlay {
+  width: 100%;
+  height: 100%;
+  padding: 60px 80px;
+
+  background: rgba(0, 0, 0, 0.4); /* dark transparent overlay */
+  color: white;
+}
+
+.deals-countdown{
+display:inline-block;
+background:#ef4444;
+padding:8px 18px;
+border-radius:25px;
+font-weight:600;
+margin-bottom:15px;
+}
+
+.deals-title{
+font-size:52px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.deals-subtitle{
+font-size:18px;
+margin-bottom:30px;
+}
+
+
+/* SEARCH BAR */
+
+.deals-search-bar{
+display:flex;
+align-items:center;
+gap:16px;
+background:#f1f1f1;
+padding:14px;
+border-radius:40px;
+width:1100px;   
+max-width:95%;
+box-shadow:0 6px 16px rgba(0,0,0,0.15);
+}
+
+
+/* SEARCH ITEM */
+
+.deals-search-item{
+display:flex;
+align-items:center;
+justify-content:space-between;
+background:white;
+padding:14px 20px;
+border-radius:30px;
+flex:1;
+border:1px solid #e5e7eb;
+position:relative;
+cursor:pointer;
+color:#111827;
+}
+
+.deals-search-left{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.deals-search-left input{
+border:none;
+outline:none;
+background:transparent;
+font-size:14px;
+}
+
+
+/* SEARCH BUTTON */
+
+.deals-search-btn{
+display:flex;
+align-items:center;
+gap:8px;
+background:#1f7a96;
+color:white;
+padding:16px 34px;
+border:none;
+border-radius:35px;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+}
+
+
+/* DROPDOWN */
+
+.deals-dropdown{
+position:absolute;
+top:65px;
+left:0;
+width:320px;
+background:white;
+border-radius:14px;
+box-shadow:0 10px 25px rgba(0,0,0,0.25);
+padding:10px 0;
+z-index:999;
+}
+
+.deals-dropdown-item{
+display:flex;
+justify-content:space-between;
+padding:12px 18px;
+cursor:pointer;
+}
+
+.deals-deal{
+color:#ef4444;
+}
+
+
+/* TRAVELLER */
+
+.deals-traveller-box{
+position:absolute;
+top:70px;
+right:0;
+width:360px;
+background:white;
+border-radius:18px;
+padding:28px;
+box-shadow:0 15px 40px rgba(0,0,0,0.25);
+z-index:999;
+}
+
+.deals-traveller-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:20px;
+}
+
+.deals-counter{
+display:flex;
+align-items:center;
+gap:18px;
+}
+
+.deals-counter button{
+width:44px;
+height:44px;
+border-radius:50%;
+border:1px solid #e5e7eb;
+background:white;
+font-size:22px;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 3px 6px rgba(0,0,0,0.1);
+}
+
+.deals-apply-btn{
+margin-top:24px;
+width:160px;
+background:#1f7a96;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:30px;
+font-weight:600;
+margin-left:auto;
+display:block;
+}
+
+
+/* RESPONSIVE */
+
+/* =================================
+TABLET
+================================= */
+
+@media (max-width:1024px){
+
+.deals-hero-overlay{
+margin-left:60px;
+}
+
+.deals-title{
+font-size:40px;
+}
+
+.deals-search-bar{
+width:100%;
+max-width:900px;
+}
+
+}
+
+
+/* =================================
+MOBILE
+================================= */
+
+@media (max-width:768px){
+
+.deals-hero{
+height:auto;
+padding:80px 20px;
+}
+
+.deals-hero-overlay{
+margin-left:0;
+}
+
+.deals-title{
+font-size:32px;
+}
+
+.deals-subtitle{
+font-size:16px;
+}
+
+/* STACK SEARCH BAR */
+
+.deals-search-bar{
+flex-direction:column;
+align-items:stretch;
+border-radius:20px;
+padding:18px;
+gap:12px;
+}
+
+/* INPUT BOX */
+
+.deals-search-item{
+width:100%;
+}
+
+/* SEARCH BUTTON */
+
+.deals-search-btn{
+width:100%;
+justify-content:center;
+padding:14px;
+}
+
+/* DROPDOWN WIDTH */
+
+.deals-dropdown{
+width:100%;
+}
+
+/* TRAVELLER BOX */
+
+.deals-traveller-box{
+right:auto;
+left:0;
+width:100%;
+}
+
+}
+
+
+/* =================================
+SMALL MOBILE
+================================= */
+
+@media (max-width:480px){
+
+.deals-title{
+font-size:26px;
+}
+
+.deals-subtitle{
+font-size:14px;
+}
+
+.deals-countdown{
+font-size:14px;
+padding:6px 14px;
+}
+
+}
+
+/* TOP DEALS */
+
+/* SECTION */
+
+.deals-top-section{
+padding:80px 120px;
+background:#f7f7f7;
+}
+
+
+/* HEADER */
+
+.deals-top-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:40px;
+}
+
+.deals-top-header h2{
+font-size:36px;
+font-weight:700;
+color:#1f2937;
+}
+
+.deals-view-btn{
+background:#dbe8ef;
+border:none;
+padding:12px 22px;
+border-radius:30px;
+font-weight:600;
+cursor:pointer;
+color:#1f7a96;
+}
+
+
+/* GRID */
+
+.deals-top-grid{
+display:grid;
+grid-template-columns:repeat(4, 1fr);
+gap:28px;
+}
+
+
+/* CARD - Now using travel-card from Home.css */
+
+/* .deals-card{
+background:white;
+border-radius:16px;
+overflow:hidden;
+cursor:pointer;
+transition:transform .3s ease;
+}
+
+.deals-card:hover{
+transform:translateY(-6px);
+} */
+
+
+/* IMAGE - Now using travel-image */
+
+/* .deals-card-image{
+position:relative;
+}
+
+.deals-card-image img{
+width:100%;
+height:280px;
+object-fit:cover;
+border-radius:16px;
+} */
+
+
+/* DISCOUNT */
+
+.deals-discount{
+position:absolute;
+top:12px;
+left:12px;
+background:#ef4444;
+color:white;
+padding:6px 14px;
+border-radius:20px;
+font-size:14px;
+font-weight:600;
+z-index:5;
+}
+
+
+/* TITLE - Now using .title from Home.css */
+
+/* .deals-card-title{
+font-size:16px;
+margin:14px 0 6px;
+color:#1f2937;
+line-height:1.4;
+} */
+
+
+/* META - Now using location and rating-box from Home.css */
+
+/* .deals-meta{
+display:flex;
+align-items:center;
+gap:6px;
+font-size:14px;
+color:#374151;
+margin-bottom:6px;
+}
+
+.deals-dot{
+margin:0 3px;
+}
+
+.deals-reviews{
+color:#6b7280;
+} */
+
+
+/* PRICES - Now using price-section from Home.css */
+
+/* .deals-old{
+font-size:14px;
+color:#6b7280;
+}
+
+.deals-old span{
+text-decoration:line-through;
+margin-left:4px;
+}
+
+.deals-price{
+font-size:18px;
+font-weight:700;
+color:#ef4444;
+margin-top:4px;
+} */
+
+/* BOTTOM - Now using card-buttons from Home.css */
+
+/* .deals-card-bottom{
+margin-top:auto;
+} */
+
+/* Override details-btn to be blue like other Book Now buttons */
+.details-btn{
+background:#2563eb !important;
+}
+
+/* TABLET */
+
+@media(max-width:1024px){
+
+.deals-top-section{
+padding:60px;
+}
+
+.deals-top-grid{
+grid-template-columns:repeat(2, 1fr);
+gap:20px;
+}
+
+}
+
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.deals-top-section{
+padding:40px 20px;
+}
+
+.deals-top-header h2{
+font-size:28px;
+}
+
+.deals-top-grid{
+grid-template-columns:1fr;
+gap:20px;
+}
+
+.travel-image img{
+height:220px;
+}
+
+}
+/* ===============================
+AUTHENTIC TRAVELLER REVIEWS
+=============================== */
+
+/* ===== SECTION ===== */
+.veena-reviews {
+  background: #162f43;
+  padding: 70px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+/* QUOTES */
+.veena-reviews::before {
+  content: "“";
+  position: absolute;
+  left: 40px;
+  top: 20px;
+  font-size: 160px;
+  color: rgba(255,255,255,0.05);
+}
+
+.veena-reviews::after {
+  content: "”";
+  position: absolute;
+  right: 40px;
+  bottom: 20px;
+  font-size: 160px;
+  color: rgba(255,255,255,0.05);
+}
+
+/* TITLE */
+.vr-title {
+  font-size: 40px;
+  font-weight: 600;
+}
+
+.vr-subtitle {
+  font-size: 14px;
+  margin-top: 6px;
+  color: #cbd5e1;
+}
+
+/* WRAPPER */
+.vr-wrapper {
+  position: relative;
+  margin-top: 40px;
+}
+
+/* SCROLL CONTAINER */
+.vr-container {
+  display: flex;
+  gap: 20px;
+  overflow: hidden; 
+  scroll-behavior: smooth;
+  padding: 0 60px;
+}
+
+/* 3 CARDS EXACTLY */
+.vr-card {
+  flex: 0 0 calc((100% - 40px) / 3);  
+  max-width: calc((100% - 40px) / 3);
+
+  background: #f5f5f5;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: left;
+  color: #111;
+}
+/* RATING */
+.vr-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.star-icon {
+  color: #f97316;
+}
+
+.vr-rate {
+  font-weight: 600;
+}
+
+/* TAG */
+.vr-tag {
+  margin-left: 6px;
+  font-size: 11px;
+  padding: 2px 7px;
+  border: 1px solid #f472b6;
+  color: #db2777;
+  border-radius: 5px;
+  background: white;
+}
+
+/* TITLE */
+.vr-heading {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* TEXT (COLLAPSED) */
+.vr-text {
+  font-size: 13px;
+  color: #4b5563;
+  margin-bottom: 6px;
+  line-height: 1.4;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+   line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* EXPANDED TEXT */
+.vr-text.expanded {
+  -webkit-line-clamp: unset;
+   line-clamp: unset;
+  overflow: visible;
+}
+
+/* READ MORE */
+.vr-read {
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* FOOTER */
+.vr-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.vr-name {
+  font-weight: 500;
+}
+
+.vr-date {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* MANAGER */
+.vr-manager {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.icon-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ARROWS */
+.vr-arrow {
+  position: absolute;
+  top: 50%;
+  background: #e5e7eb;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 5; 
+}
+
+/* LEFT ARROW (OVER CARD) */
+.vr-arrow.left {
+  left: 30px; 
+}
+
+/* RIGHT ARROW */
+.vr-arrow.right {
+  right: 30px;
+}
+/* BUTTON */
+.vr-btn {
+  margin-top: 30px;
+  padding: 12px 24px;
+  background: #e65c00;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1024px) {
+  .vr-card {
+    min-width: 280px;
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .vr-title {
+    font-size: 20px;
+  }
+
+  .vr-card {
+    min-width: 240px;
+    max-width: 240px;
+    padding: 14px;
+  }
+
+  .vr-container {
+    padding: 0 20px;
+  }
+
+  .vr-arrow {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* ===============================
+WORLDWIDE DEALS
+=============================== */
+
+.world-deals{
+padding:60px 8%;
+background:#f5f6f8;
+}
+
+.world-title{
+font-size:28px;
+font-weight:600;
+margin-bottom:30px;
+color:#1f2937;
+text-align:left;
+}
+
+/* GRID */
+
+.world-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:24px;
+}
+
+/* CARD */
+
+.world-card{
+position:relative;
+border-radius:16px;
+overflow:hidden;
+height:280px;
+cursor:pointer;
+box-shadow:0 6px 18px rgba(0,0,0,0.1);
+}
+
+.world-card img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* HOVER ZOOM */
+
+/* BADGE */
+
+.deal-badge{
+position:absolute;
+top:15px;
+left:15px;
+background:#ef4444;
+color:white;
+font-size:12px;
+font-weight:600;
+padding:6px 12px;
+border-radius:20px;
+}
+
+/* OVERLAY */
+
+.world-overlay{
+position:absolute;
+bottom:0;
+left:0;
+right:0;
+padding:18px;
+color:white;
+display:flex;
+justify-content:space-between;  
+align-items:center;
+background:linear-gradient(
+transparent,
+rgba(0,0,0,0.8)
+);
+}
+
+.world-overlay h3{
+margin:0;
+font-size:20px;
+font-weight:600;
+}
+
+.world-overlay p{
+margin:5px 0 0;
+font-size:14px;
+opacity:0.9;
+}
+
+/* ===============================
+RESPONSIVE
+=============================== */
+
+@media (max-width:1024px){
+.world-grid{
+grid-template-columns:repeat(2,1fr);
+}
+}
+
+@media (max-width:768px){
+.world-grid{
+grid-template-columns:1fr;
+}
+
+.world-card{
+height:200px;
+}
+}
+
+/* ===============================
+ADVENTURE SIMPLIFIED
+=============================== */
+
+.adventure{
+background:#f5f6f8;
+padding:70px 8%;
+}
+
+.adventure-container{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:50px;
+}
+
+/* LEFT */
+
+.adventure-left{
+flex:1;
+
+}
+
+.adventure-left h2{
+font-size:34px;
+font-weight:700;
+margin-bottom:20px;
+color:#1f2937;
+text-align: left;
+}
+
+.adventure-left h4{
+font-size:18px;
+font-weight:600;
+margin-bottom:10px;
+}
+
+.adventure-left p{
+color:#374151;
+line-height:1.6;
+margin-bottom:15px;
+}
+
+.adventure-sub{
+margin-top:20px;
+font-weight:500;
+}
+
+.adventure-list{
+list-style:none;
+padding:0;
+margin-top:15px;
+}
+
+.adventure-list li{
+margin-bottom:10px;
+font-size:15px;
+}
+
+/* RIGHT */
+
+.adventure-right{
+flex:1;
+display:flex;
+justify-content:center;
+}
+
+.adventure-card{
+background:linear-gradient(135deg,#cfe0ed,#b7d1e2);
+border-radius:20px;
+padding:40px;
+width:100%;
+max-width:420px;
+text-align:center;
+position:relative;
+overflow:hidden;
+}
+
+.adventure-card h3{
+font-size:26px;
+font-weight:700;
+margin-bottom:20px;
+color:#1f3b4d;
+}
+
+.vr-btn-wrapper{
+display:flex;
+justify-content:center;
+margin-top:30px;
+}
+
+/* ===============================
+RESPONSIVE
+=============================== */
+
+@media (max-width:1024px){
+
+.adventure-container{
+flex-direction:column;
+text-align:center;
+}
+
+.adventure-left{
+text-align:center;
+}
+
+.phone-img{
+position:relative;
+right:0;
+bottom:0;
+margin-top:20px;
+}
+
+}
+
+@media (max-width:768px){
+
+.adventure-left h2{
+font-size:28px;
+}
+
+.adventure-card{
+padding:30px;
+}
+
+.phone-img{
+width:180px;
+}
+
+}
+
+@media (max-width:480px){
+
+.adventure{
+padding:50px 5%;
+}
+
+.adventure-left h2{
+font-size:24px;
+}
+
+.adventure-card h3{
+font-size:20px;
+}
+
+.store-buttons img{
+height:32px;
+}
+
+.phone-img{
+width:150px;
+}
+
+}
