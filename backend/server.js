@@ -747,32 +747,60 @@ app.get('/api/bookings/:id/receipt', async (req, res) => {
 
         const booking = bookingRes.rows[0];
 
-        const additionalTravelerText = booking.additional_travelers ? JSON.parse(booking.additional_travelers).map((t, i) => `  ${i + 2}. ${t.firstName} ${t.lastName} (Age: ${t.age})`).join('\n') : 'None';
+        const PDFDocument = require('pdfkit');
+        const doc = new PDFDocument({ margin: 50 });
 
-        const content = `TravelHub Receipt\n` +
-            `-----------------------------\n` +
-            `Booking ID: ${booking.id}\n` +
-            `Customer: ${booking.customer_name}\n` +
-            `Email: ${booking.email || 'N/A'}\n` +
-            `Phone: ${booking.phone || 'N/A'}\n` +
-            `Address: ${booking.address || 'N/A'}\n` +
-            `City: ${booking.city || 'N/A'}\n` +
-            `Country: ${booking.country || 'N/A'}\n` +
-            `Customer Age: ${booking.age || 'N/A'}\n` +
-            `Package: ${booking.package_title}\n` +
-            `Destination: ${booking.destination}\n` +
-            `Duration: ${booking.days || 'N/A'} days / ${booking.nights || 'N/A'} nights\n` +
-            `Travel Date: ${booking.travel_date ? new Date(booking.travel_date).toLocaleDateString() : 'N/A'}\n` +
-            `Traveler Count: ${booking.travelers || 1}\n` +
-            `Additional Travelers:\n${additionalTravelerText}\n` +
-            `Status: ${booking.status}\n` +
-            `Package Price (per person): ₹${booking.package_price}\n` +
-            `Total Amount: ₹${Number(booking.package_price) * Number(booking.travelers || 1)}\n` +
-            `Booked At: ${new Date(booking.created_at).toLocaleString()}\n`;
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="receipt.pdf"`);
+        doc.pipe(res);
 
-        res.setHeader('Content-Type', 'text/plain');
-        res.setHeader('Content-Disposition', `attachment; filename="booking-receipt-${booking.id}.txt"`);
-        res.send(content);
+        doc.fontSize(20).text('TravelHub Booking Receipt', { align: 'center' });
+        doc.moveDown();
+        doc.fontSize(12);
+
+        doc.text(`Booking ID: ${booking.id}`);
+        doc.text(`Customer Name: ${booking.customer_name}`);
+        doc.text(`Email: ${booking.email || 'N/A'}`);
+        doc.text(`Phone: ${booking.phone || 'N/A'}`);
+        doc.text(`Address: ${booking.address || 'N/A'}`);
+        doc.text(`City: ${booking.city || 'N/A'}`);
+        doc.text(`Country: ${booking.country || 'N/A'}`);
+        doc.text(`Customer Age: ${booking.age || 'N/A'}`);
+        
+        doc.moveDown();
+        doc.fontSize(16).text('Package Information');
+        doc.fontSize(12);
+        doc.text(`Package: ${booking.package_title}`);
+        doc.text(`Destination: ${booking.destination}`);
+        doc.text(`Duration: ${booking.days || 'N/A'} days / ${booking.nights || 'N/A'} nights`);
+        doc.text(`Travel Date: ${booking.travel_date ? new Date(booking.travel_date).toLocaleDateString() : 'N/A'}`);
+        doc.text(`Total Travelers: ${booking.travelers || 1}`);
+
+        if (booking.additional_travelers) {
+            try {
+                const add = JSON.parse(booking.additional_travelers);
+                if (add && add.length > 0) {
+                    doc.moveDown();
+                    doc.text('Additional Travelers:');
+                    add.forEach((t, i) => {
+                        doc.text(` ${i+2}. ${t.firstName} ${t.lastName} (Age: ${t.age})`);
+                    });
+                }
+            } catch (e) {}
+        }
+        
+        doc.moveDown();
+        doc.fontSize(16).text('Payment Details');
+        doc.fontSize(12);
+        doc.text(`Status: ${booking.status}`);
+        doc.text(`Package Price (per person): INR ${booking.package_price}`);
+        doc.text(`Total Amount: ${Number(booking.package_price) * Number(booking.travelers || 1)}`);
+        
+        doc.moveDown(2);
+        doc.text(`Generated at: ${new Date().toLocaleString()}`);
+
+        doc.end();
+
     } catch (err) {
         console.error('Receipt error', err);
         res.status(500).json({ message: 'Error generating receipt' });

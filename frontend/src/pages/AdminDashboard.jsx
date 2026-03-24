@@ -21,6 +21,14 @@ const AdminDashboard = () => {
     const [bookings, setBookings] = useState([]);
     const [destinationFilter, setDestinationFilter] = useState("");
 
+    const parseHotels = (hotels) => {
+        if (!hotels) return "None";
+        try {
+            const hArray = typeof hotels === "string" ? JSON.parse(hotels) : hotels;
+            if (!Array.isArray(hArray)) return "None";
+            return hArray.map(h => typeof h === "string" ? h : h.name || h.hotel_name || "Included").join(", ");
+        } catch(e) { return "None"; }
+    };
 
     useEffect(() => {
 
@@ -570,7 +578,8 @@ const AdminDashboard = () => {
 
                                             <h3>{pkg.title}</h3>
                                             <p>{pkg.destination} • {pkg.days} days</p>
-                                            <p>Price: ${pkg.price}</p>
+                                            <p>Price: ₹{pkg.price}</p>
+                                            <p>Hotels: {parseHotels(pkg.hotels)}</p>
                                             <p>Agent: {pkg.agent_name || `Agent #${pkg.agent_id}`}</p>
 
                                         </div>
@@ -687,7 +696,8 @@ const AdminDashboard = () => {
 
                                 <h3>{pkg.title}</h3>
                                 <p>{pkg.destination} • {pkg.days} Days / {pkg.nights} Nights</p>
-                                <p>Price: ${pkg.price}</p>
+                                <p>Price: ₹{pkg.price}</p>
+                                <p>Hotels: {parseHotels(pkg.hotels)}</p>
 
                                 <p>Status:
                                     <span style={{
@@ -898,6 +908,7 @@ const AdminDashboard = () => {
                                         <th>Travel Date</th>
                                         <th>Travelers</th>
                                         <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -918,6 +929,25 @@ const AdminDashboard = () => {
                                                 <td>{b.travel_date ? new Date(b.travel_date).toLocaleDateString() : 'N/A'}</td>
                                                 <td>{b.travelers}</td>
                                                 <td>{b.status}</td>
+                                                <td>
+                                                  <button onClick={async () => {
+                                                    try {
+                                                      const res = await fetch(`/api/bookings/${b.id}/receipt`);
+                                                      if (!res.ok) throw new Error('Failed');
+                                                      const blob = await res.blob();
+                                                      const url = window.URL.createObjectURL(blob);
+                                                      const a = document.createElement('a');
+                                                      a.href = url;
+                                                      a.download = `receipt.pdf`;
+                                                      document.body.appendChild(a);
+                                                      a.click();
+                                                      document.body.removeChild(a);
+                                                      window.URL.revokeObjectURL(url);
+                                                    } catch (err) {
+                                                      alert('Error downloading receipt');
+                                                    }
+                                                  }} style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}>Download Receipt</button>
+                                                </td>
                                             </tr>
                                         ))
                                     )}

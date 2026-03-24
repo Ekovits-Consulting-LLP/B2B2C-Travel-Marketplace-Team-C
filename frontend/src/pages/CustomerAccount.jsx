@@ -194,12 +194,11 @@ borderRadius:"14px"
               if (!res.ok) {
                 throw new Error(`HTTP ${res.status}`);
               }
-              const text = await res.text();
-              const blob = new Blob([text], { type: 'text/plain' });
+              const blob = await res.blob();
               const url = window.URL.createObjectURL(blob);
               const a = document.createElement('a');
               a.href = url;
-              a.download = `booking-receipt-${bk.id}.txt`;
+              a.download = `receipt.pdf`;
               document.body.appendChild(a);
               a.click();
               document.body.removeChild(a);

@@ -294,11 +294,7 @@ function ExplorePackage() {
                         <span className="meta-item">
                             <Users className="meta-icon" /> Max {selectedPackage.travelers} travelers
                         </span>
-                        {selectedPackage.hotels && selectedPackage.hotels.length > 0 && (
-                            <span className="meta-item">
-                                🏨 {typeof selectedPackage.hotels[0] === "string" ? selectedPackage.hotels[0] : selectedPackage.hotels[0].name || "Accommodation Included"}
-                            </span>
-                        )}
+
                     </div>
 
                     <div className="review-row">

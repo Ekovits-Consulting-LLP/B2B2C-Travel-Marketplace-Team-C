@@ -62,6 +62,14 @@ const BookPackage = () => {
 
   const handleConfirmBooking = async () => {
     if (isSubmitting) return;
+
+    const userStr = localStorage.getItem("user");
+    if (!userStr) {
+        alert("Authentication failed: Please sign in to confirm booking.");
+        navigate("/");
+        return;
+    }
+
     setIsSubmitting(true);
     try {
       const res = await fetch("/api/bookings", {
@@ -88,34 +96,38 @@ const BookPackage = () => {
       const booking = await res.json();
       setLastBookingId(booking.id);
       setBookingComplete(true);
+      alert("Booking Successful");
       setStep(3);
-      alert("Booking successful! Your receipt is ready to download.");
     } catch (err) {
       console.error(err);
-      alert("Unable to complete booking. Please try again.");
+      alert(`Could not confirm booking: ${err.message}`);
     }
     setIsSubmitting(false);
   };
 
   const downloadReceipt = async (bookingId) => {
     try {
-      const res = await fetch(`/api/bookings/${bookingId}/receipt`);
+      const res = await fetch(`/api/bookings/${bookingId}/receipt`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).token || 'dummy' : ''}`
+        }
+      });
       if (!res.ok) {
-        throw new Error('Receipt download failed');
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.message || 'Receipt download failed');
       }
-      const text = await res.text();
-      const blob = new Blob([text], { type: 'text/plain' });
+      const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `booking-receipt-${bookingId}.txt`;
+      a.download = `receipt.pdf`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Receipt download error', err);
-      alert('Could not download receipt. Please try again.');
+      alert(`Could not download receipt: ${err.message}`);
     }
   };
 
@@ -256,6 +268,13 @@ const BookPackage = () => {
                 <div className="review-item"><span className="review-label">Destination:</span> <span className="review-value">{pkg.destination}</span></div>
                 <div className="review-item"><span className="review-label">Departure Date:</span> <span className="review-value">{travelDate || 'Not selected'}</span></div>
                 <div className="review-item"><span className="review-label">Duration:</span> <span className="review-value">{pkg.days} Days / {pkg.nights} Nights</span></div>
+                <div className="review-item"><span className="review-label">Hotel:</span> <span className="review-value">
+                  {pkg.hotels && (typeof pkg.hotels === 'string' ? JSON.parse(pkg.hotels) : pkg.hotels).length > 0
+                    ? (typeof (typeof pkg.hotels === 'string' ? JSON.parse(pkg.hotels) : pkg.hotels)[0] === 'string'
+                        ? (typeof pkg.hotels === 'string' ? JSON.parse(pkg.hotels) : pkg.hotels)[0]
+                        : (typeof pkg.hotels === 'string' ? JSON.parse(pkg.hotels) : pkg.hotels)[0].name || (typeof pkg.hotels === 'string' ? JSON.parse(pkg.hotels) : pkg.hotels)[0].hotel_name || "Accommodation Included")
+                    : "Not specified"}
+                </span></div>
                 <div className="review-item"><span className="review-label">Travelers:</span> <span className="review-value">{travelerCount} Person(s)</span></div>
               </div>
 
@@ -272,27 +291,37 @@ const BookPackage = () => {
 
           {step === 3 && (
             <div className="payment-container">
-              <div className="booking-form-grid" style={{ marginTop: "16px" }}>
-                <div className="booking-input-group full-width">
-                  <label>Card Number</label>
-                  <input className="booking-input" placeholder="0000 0000 0000 0000" />
+              {bookingComplete ? (
+                <div style={{ textAlign: "center", padding: "40px 20px" }}>
+                  <div style={{ fontSize: "40px", marginBottom: "10px" }}>✅</div>
+                  <h2 style={{ color: "#10b981", marginBottom: "10px" }}>Booking Successful</h2>
+                  <p>Your booking has been confirmed! Please keep your receipt for reference.</p>
                 </div>
-                <div className="booking-input-group full-width">
-                  <label>Name on Card</label>
-                  <input className="booking-input" placeholder="John Doe" />
-                </div>
-                <div className="booking-input-group">
-                  <label>Expiry Date</label>
-                  <input className="booking-input" placeholder="MM/YY" />
-                </div>
-                <div className="booking-input-group">
-                  <label>CVV</label>
-                  <input className="booking-input" placeholder="123" type="password" maxLength="4" />
-                </div>
-              </div>
-              <p style={{ marginTop: "20px", fontSize: "0.9rem", color: "#64748b" }}>
-                By confirming this booking, you agree to our Terms of Service and Cancellation Policy.
-              </p>
+              ) : (
+                <>
+                  <div className="booking-form-grid" style={{ marginTop: "16px" }}>
+                    <div className="booking-input-group full-width">
+                      <label>Card Number</label>
+                      <input className="booking-input" placeholder="0000 0000 0000 0000" />
+                    </div>
+                    <div className="booking-input-group full-width">
+                      <label>Name on Card</label>
+                      <input className="booking-input" placeholder="John Doe" />
+                    </div>
+                    <div className="booking-input-group">
+                      <label>Expiry Date</label>
+                      <input className="booking-input" placeholder="MM/YY" />
+                    </div>
+                    <div className="booking-input-group">
+                      <label>CVV</label>
+                      <input className="booking-input" placeholder="123" type="password" maxLength="4" />
+                    </div>
+                  </div>
+                  <p style={{ marginTop: "20px", fontSize: "0.9rem", color: "#64748b" }}>
+                    By confirming this booking, you agree to our Terms of Service and Cancellation Policy.
+                  </p>
+                </>
+              )}
             </div>
           )}
 
@@ -304,7 +333,7 @@ const BookPackage = () => {
             {step < 3 && (
               <button className="btn-next" onClick={handleContinue}>Continue to {step === 1 ? "Review" : "Payment"} →</button>
             )}
-            {step === 3 && (
+            {step === 3 && !bookingComplete && (
               <button className="btn-next" onClick={handleContinue} disabled={isSubmitting}>
                 {isSubmitting ? "Processing..." : "Confirm & Pay ₹" + getTotalPrice()}
               </button>

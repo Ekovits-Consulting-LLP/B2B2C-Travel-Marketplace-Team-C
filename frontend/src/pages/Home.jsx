@@ -695,11 +695,12 @@ function Home() {
             <button
               className="btn-primary"
               style={{ backgroundColor: "#ff6a00", color: "white" }}
+              onClick={() => navigate("/packagespecific")}
             >
               Browse Packages →
             </button>
 
-            <button className="btn-outline">
+            <button className="btn-outline" onClick={() => navigate("/register")}>
               Become an Agent
             </button>
 
