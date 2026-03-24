@@ -109,3 +109,17 @@ CONSTRAINT unique_review
 UNIQUE (consumer_id, package_id, review_type)
 
 );
+
+
+----------------------------------------------------------------------------------
+
+CREATE TABLE bookings (
+    id SERIAL PRIMARY KEY,
+    package_id INTEGER,
+    customer_name VARCHAR(100),
+    email VARCHAR(100),
+    travelers INTEGER,
+    travel_date DATE,
+    status VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
