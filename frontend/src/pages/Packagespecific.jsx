@@ -218,7 +218,7 @@ Search Packages
 
 </div>
 
-<div className="hero-tags">
+{/* <div className="hero-tags">
 
 <span>Europe</span>
 <span>Asia</span>
@@ -227,7 +227,7 @@ Search Packages
 <span>Adventure</span>
 <span>Cultural</span>
 
-</div>
+</div> */}
 
 </div>
 
@@ -315,7 +315,7 @@ type="checkbox"
 checked={priceFilter.includes("lux")}
 onChange={()=>handleCheckbox("lux",priceFilter,setPriceFilter)}
 />
-$5000+
+Rs.5000+
 </label>
 
 </div>
