@@ -617,12 +617,12 @@ app.delete('/api/admin/agents/:id', async (req, res) => {
 
 app.post('/api/bookings', async (req, res) => {
     try {
-        const { package_id, customer_name, email, phone, address, city, country, age, travelers, travel_date, additional_travelers } = req.body;
+        const { package_id, customer_name, email, phone, address, city, country, age, travelers, travel_date, additional_travelers, booked_by } = req.body;
 
         const booking = await db.query(
             `INSERT INTO bookings 
-            (package_id, customer_name, email, phone, address, city, country, age, travelers, travel_date, additional_travelers, status) 
-            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,'confirmed')
+            (package_id, customer_name, email, phone, address, city, country, age, travelers, travel_date, additional_travelers, status, booked_by) 
+            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,'confirmed',$12)
             RETURNING *`,
             [
               package_id,
@@ -635,7 +635,8 @@ app.post('/api/bookings', async (req, res) => {
               age || null,
               travelers || 1,
               travel_date || null,
-              additional_travelers ? JSON.stringify(additional_travelers) : null
+              additional_travelers ? JSON.stringify(additional_travelers) : null,
+              booked_by || null
             ]
         );
 
@@ -649,7 +650,9 @@ app.post('/api/bookings', async (req, res) => {
 
 app.get('/api/bookings', async (req, res) => {
     try {
-        const { email, customer_name, package_id } = req.query;
+        const { email, customer_name, package_id, booked_by } = req.query;
+
+        console.log('GET /api/bookings called with:', { email, customer_name, package_id, booked_by });
 
         let query = `
             SELECT b.*, p.title as package_title, p.agent_id, u.full_name AS agent_name 
@@ -676,13 +679,23 @@ app.get('/api/bookings', async (req, res) => {
             conditions.push(`b.package_id = $${params.length}`);
         }
 
+        if (booked_by) {
+            params.push(parseInt(booked_by));
+            conditions.push(`b.booked_by = $${params.length}`);
+            console.log('Filtering by booked_by:', parseInt(booked_by));
+        }
+
         if (conditions.length > 0) {
             query += ` WHERE ${conditions.join(' AND ')}`;
         }
 
+        console.log('Final query:', query, 'params:', params);
+
         query += ` ORDER BY b.created_at DESC`;
 
         const result = await db.query(query, params);
+
+        console.log('Query returned', result.rows.length, 'bookings');
 
         res.json(result.rows);
     } catch (err) {
@@ -748,56 +761,115 @@ app.get('/api/bookings/:id/receipt', async (req, res) => {
         const booking = bookingRes.rows[0];
 
         const PDFDocument = require('pdfkit');
-        const doc = new PDFDocument({ margin: 50 });
+        const doc = new PDFDocument({ margin: 40 });
 
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename="receipt.pdf"`);
+        res.setHeader('Content-Disposition', `attachment; filename="receipt-${booking.id}.pdf"`);
         doc.pipe(res);
 
-        doc.fontSize(20).text('TravelHub Booking Receipt', { align: 'center' });
-        doc.moveDown();
-        doc.fontSize(12);
+        // receipt header
+        doc.fontSize(22).fillColor('#0f172a').font('Helvetica-Bold').text('TravelHub', { align: 'center' });
+        doc.fontSize(11).fillColor('#475569').font('Helvetica').text('Booking Receipt & Tax Invoice', { align: 'center' });
+        doc.moveDown(0.5);
 
-        doc.text(`Booking ID: ${booking.id}`);
-        doc.text(`Customer Name: ${booking.customer_name}`);
-        doc.text(`Email: ${booking.email || 'N/A'}`);
-        doc.text(`Phone: ${booking.phone || 'N/A'}`);
-        doc.text(`Address: ${booking.address || 'N/A'}`);
-        doc.text(`City: ${booking.city || 'N/A'}`);
-        doc.text(`Country: ${booking.country || 'N/A'}`);
-        doc.text(`Customer Age: ${booking.age || 'N/A'}`);
-        
-        doc.moveDown();
-        doc.fontSize(16).text('Package Information');
-        doc.fontSize(12);
-        doc.text(`Package: ${booking.package_title}`);
-        doc.text(`Destination: ${booking.destination}`);
-        doc.text(`Duration: ${booking.days || 'N/A'} days / ${booking.nights || 'N/A'} nights`);
-        doc.text(`Travel Date: ${booking.travel_date ? new Date(booking.travel_date).toLocaleDateString() : 'N/A'}`);
-        doc.text(`Total Travelers: ${booking.travelers || 1}`);
+        doc.fontSize(9).fillColor('#475569').font('Helvetica').text('123 Wanderlust Street, Travel City, India', { align: 'center' });
+        doc.text('Phone: +91 12345 67890 | Email: support@travelhub.example', { align: 'center' });
+        doc.moveDown(1);
 
-        if (booking.additional_travelers) {
-            try {
-                const add = JSON.parse(booking.additional_travelers);
-                if (add && add.length > 0) {
-                    doc.moveDown();
-                    doc.text('Additional Travelers:');
-                    add.forEach((t, i) => {
-                        doc.text(` ${i+2}. ${t.firstName} ${t.lastName} (Age: ${t.age})`);
-                    });
-                }
-            } catch (e) {}
-        }
-        
-        doc.moveDown();
-        doc.fontSize(16).text('Payment Details');
-        doc.fontSize(12);
-        doc.text(`Status: ${booking.status}`);
-        doc.text(`Package Price (per person): INR ${booking.package_price}`);
-        doc.text(`Total Amount: ${Number(booking.package_price) * Number(booking.travelers || 1)}`);
-        
-        doc.moveDown(2);
-        doc.text(`Generated at: ${new Date().toLocaleString()}`);
+        const sectionLeft = doc.page.margins.left;
+        const sectionRight = doc.page.width - doc.page.margins.right;
+        const midPoint = sectionLeft + (sectionRight - sectionLeft) / 2;
+
+        const now = new Date();
+        const receiptDate = now.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const receiptTime = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+        doc.lineWidth(1).strokeColor('#cbd5e1').moveTo(sectionLeft, doc.y).lineTo(sectionRight, doc.y).stroke();
+        doc.moveDown(0.5);
+
+        doc.font('Helvetica-Bold').fontSize(10).fillColor('#0f172a').text('Receipt No:', sectionLeft);
+        doc.font('Helvetica').fontSize(10).text(`#${booking.id}`, sectionLeft + 60, doc.y - 14);
+
+        doc.font('Helvetica-Bold').text('Date:', midPoint);
+        doc.font('Helvetica').text(`${receiptDate} ${receiptTime}`, midPoint + 36, doc.y - 14);
+
+        doc.font('Helvetica-Bold').text('Status:', sectionLeft);
+        doc.font('Helvetica').text(`${(booking.status || 'confirmed').toUpperCase()}`, sectionLeft + 50, doc.y);
+
+        doc.font('Helvetica-Bold').text('Travel Date:', midPoint);
+        doc.font('Helvetica').text(booking.travel_date ? new Date(booking.travel_date).toLocaleDateString('en-IN') : 'N/A', midPoint + 70, doc.y);
+
+        doc.moveDown(1.7);
+        doc.lineWidth(1).strokeColor('#cbd5e1').moveTo(sectionLeft, doc.y).lineTo(sectionRight, doc.y).stroke();
+        doc.moveDown(0.8);
+
+        doc.font('Helvetica-Bold').fontSize(10).fillColor('#0f172a').text('Billed To:', sectionLeft);
+        doc.font('Helvetica').fontSize(10).fillColor('#475569').text(booking.customer_name || 'N/A', sectionLeft, doc.y + 14);
+        doc.font('Helvetica').fontSize(9).text(booking.email || 'N/A', sectionLeft, doc.y + 28);
+        doc.text(booking.phone || 'N/A', sectionLeft, doc.y + 40);
+        const fullAddress = `${booking.address || ''}${booking.city ? ', ' + booking.city : ''}${booking.country ? ', ' + booking.country : ''}`.trim() || 'N/A';
+        doc.text(fullAddress, sectionLeft, doc.y + 52);
+
+        doc.font('Helvetica-Bold').fontSize(10).fillColor('#0f172a').text('Package:', midPoint);
+        doc.font('Helvetica').fontSize(10).fillColor('#475569').text(booking.package_title || 'N/A', midPoint, doc.y + 14);
+        doc.font('Helvetica').fontSize(9).text(`Destination: ${booking.destination || 'N/A'}`, midPoint, doc.y + 28);
+        doc.text(`Duration: ${booking.days || 'N/A'}d / ${booking.nights || 'N/A'}n`, midPoint, doc.y + 40);
+        doc.text(`Travelers: ${booking.travelers || 1}`, midPoint, doc.y + 52);
+
+        doc.moveDown(5);
+
+        // line item table header
+        doc.font('Helvetica-Bold').fontSize(10).fillColor('#0f172a');
+        const col1 = sectionLeft;
+        const col2 = sectionLeft + 180;
+        const col3 = sectionLeft + 300;
+        const col4 = sectionRight - 80;
+
+        doc.text('Description', col1, doc.y);
+        doc.text('Qty', col2, doc.y, { width: 60, align: 'right' });
+        doc.text('Unit Price', col3, doc.y, { width: 80, align: 'right' });
+        doc.text('Amount', col4, doc.y, { width: 80, align: 'right' });
+        doc.moveDown(0.4);
+
+        doc.lineWidth(0.8).strokeColor('#cbd5e1').moveTo(sectionLeft, doc.y).lineTo(sectionRight, doc.y).stroke();
+        doc.moveDown(0.5);
+
+        const travelers = Number(booking.travelers || 1);
+        const basePrice = Number(booking.package_price || 0);
+        const itemAmount = basePrice * travelers;
+
+        doc.font('Helvetica').fontSize(9).fillColor('#334155');
+        doc.text(booking.package_title || 'Package Booking', col1, doc.y, { width: 170 });
+        doc.text(`${travelers}`, col2, doc.y, { width: 60, align: 'right' });
+        doc.text(`₹${basePrice.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, col3, doc.y, { width: 80, align: 'right' });
+        doc.text(`₹${itemAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, col4, doc.y, { width: 80, align: 'right' });
+
+        doc.moveDown(0.8);
+        doc.lineWidth(0.8).strokeColor('#cbd5e1').moveTo(sectionLeft, doc.y).lineTo(sectionRight, doc.y).stroke();
+
+        // Summary
+        const tax = Math.round(itemAmount * 0.10);
+        const total = itemAmount + tax;
+
+        const summaryX = sectionRight - 225;
+
+        const summaryLine = (title, value) => {
+            const y = doc.y;
+            doc.font('Helvetica').fontSize(10).fillColor('#475569').text(title, summaryX, y);
+            doc.font('Helvetica-Bold').fillColor('#0f172a').text(value, sectionRight - 5, y, { width: 80, align: 'right' });
+            doc.moveDown(0.6);
+        };
+
+        doc.moveDown(0.3);
+        summaryLine('Subtotal', `₹${itemAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`);
+        summaryLine('Tax (10%)', `₹${tax.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`);
+        summaryLine('Total', `₹${total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`);
+
+        doc.moveDown(1);
+        doc.font('Helvetica-Oblique').fontSize(8).fillColor('#94a3b8').text('This is a computer-generated receipt and does not require a signature.', sectionLeft, doc.y, { width: sectionRight - sectionLeft, align: 'center' });
+
+        doc.moveDown(0.3);
+        doc.font('Helvetica').fontSize(9).fillColor('#475569').text('Thank you for choosing TravelHub. For assistance, contact support@travelhub.example or +91 12345 67890.', sectionLeft, doc.y, { width: sectionRight - sectionLeft, align: 'center' });
 
         doc.end();
 

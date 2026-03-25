@@ -166,6 +166,7 @@ body {
   height: var(--nav-height);
   position: absolute;
   left: 50%;
+  transform: translateX(-50%);
 }
 
 .nav-link {

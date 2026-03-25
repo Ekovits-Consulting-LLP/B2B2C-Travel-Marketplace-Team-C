@@ -2,11 +2,40 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "../App.css";
 import { MapPin, Calendar, Users } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "../styles/packageDetails.css";
 
 function PackageDetails() {
     const navigate = useNavigate();
+    const { id } = useParams();
+    const [pkg, setPkg] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (!id) return;
+        fetch(`/api/packages/${id}`)
+            .then((res) => res.json())
+            .then((data) => {
+                setPkg(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error("PackageDetails fetch error", err);
+                setLoading(false);
+            });
+    }, [id]);
+
+    if (loading) return <div style={{ padding: 40, textAlign: "center" }}><h3>Loading package details...</h3></div>;
+    if (!pkg) return <div style={{ padding: 40, textAlign: "center" }}><h3>Package not found</h3></div>;
+
+    const parseJSON = (str) => {
+        try {
+            return typeof str === 'string' ? JSON.parse(str) : str;
+        } catch {
+            return [];
+        }
+    };
 
 return (
 
@@ -28,7 +57,7 @@ Home
 Packages
 </span>
 
-{" / "} Dubai Complete Tour
+{" / "} {pkg.title}
 
 </p>
 
@@ -44,16 +73,21 @@ onClick={() => navigate(-1)}
 <div className="details-image">
 
 <img
-src="/images/packages/dubai-complete.jpg"
-alt="Dubai"
+src={pkg.images && pkg.images.length > 0 ? `/uploads/${pkg.images[0]}` : "/images/packages/dubai-complete.jpg"}
+alt={pkg.title}
 className="main-img"
 />
 
 <div className="thumbnail-row">
 
+{pkg.images && pkg.images.length > 1 ? pkg.images.slice(1, 3).map((img, idx) => (
+<img key={idx} src={`/uploads/${img}`} alt="" />
+)) : (
+<>
 <img src="/images/packages/dubai-complete.jpg" alt="" />
-
 <img src="/images/packages/dubai-luxury.jpg" alt="" />
+</>
+)}
 
 </div>
 
@@ -63,13 +97,13 @@ className="main-img"
 
 <p className="price-label">Starting from</p>
 
-<h2 className="price">Rs.1599 <span className="old-price">Rs.1899</span></h2>
+<h2 className="price">Rs.{Number(pkg.final_price || pkg.price).toLocaleString('en-IN')} <span className="old-price">Rs.{Number(pkg.price).toLocaleString('en-IN')}</span></h2>
 
 <p className="per-person">per person</p>
 
-<div className="save-tag">Save Rs.300</div>
+<div className="save-tag">Save Rs.{Number(pkg.price - (pkg.final_price || pkg.price)).toLocaleString('en-IN')}</div>
 
-<button className="book-btn" onClick={() => window.location.href = `/book/${/* use selected package id if dynamic? fallback to 1 */ 1}`} >Book Now</button>
+<button className="book-btn" onClick={() => window.location.href = `/book/${pkg.id}`} >Book Now</button>
 
 
 <div className="action-row">
@@ -100,20 +134,20 @@ Have questions about this package? Contact our travel experts.
 
 <div className="details-card">
 
-<h2>Dubai Complete Tour</h2>
+<h2>{pkg.title}</h2>
 
 <div className="meta-row">
 
 <span className="meta-item">
-<MapPin className="meta-icon"/> Maldives
+<MapPin className="meta-icon"/>{pkg.destination}
 </span>
 
 <span className="meta-item">
-<Calendar className="meta-icon"/> 4 Days / 3 Nights
+<Calendar className="meta-icon"/>{pkg.days} Days / {pkg.nights} Nights
 </span>
 
 <span className="meta-item">
-<Users className="meta-icon"/> Max 4 travelers
+<Users className="meta-icon"/>Max {pkg.travelers || 4} travelers
 </span>
 
 </div>
@@ -121,13 +155,13 @@ Have questions about this package? Contact our travel experts.
 <div className="review-row">
 
 <div className="review-left">
-⭐ 4.7 <span className="review-count">(203 reviews)</span>
+⭐ {pkg.rating || 4.7} <span className="review-count">({pkg.reviews || 203} reviews)</span>
 </div>
 
 <div className="tags">
-<span>Mid-Range</span>
-<span>Family</span>
-<span>Adventure</span>
+{pkg.package_types && parseJSON(pkg.package_types).map((type, idx) => (
+<span key={idx}>{type}</span>
+))}
 </div>
 
 </div>
@@ -137,7 +171,7 @@ Have questions about this package? Contact our travel experts.
 <h3>Overview</h3>
 
 <p className="overview-text">
-Comprehensive Dubai experience with premium 4-star hotels and desert safari.
+{pkg.description || "Comprehensive experience with premium accommodations and activities."}
 </p>
 
 </div>
@@ -147,37 +181,17 @@ Comprehensive Dubai experience with premium 4-star hotels and desert safari.
 <h3>Day-wise Itinerary</h3>
 
 <ul className="itinerary">
-
-<li>
-<span className="day-badge">1</span>
-Arrival & Marina
+{parseJSON(pkg.itinerary).map((day, index) => (
+<li key={index}>
+<span className="day-badge">{day.day || (index + 1)}</span>
+{day.title}
+{pkg.hotels && Array.isArray(pkg.hotels) && pkg.hotels.some(h => h.day_number === (day.day || (index + 1))) && (
+<div style={{ marginTop: "6px", fontSize: "13px", color: "#2563eb" }}>
+🏨 Stay: {pkg.hotels.find(h => h.day_number === (day.day || (index + 1))).hotel_name}
+</div>
+)}
 </li>
-
-<li>
-<span className="day-badge">2</span>
-Dubai City Tour
-</li>
-
-<li>
-<span className="day-badge">3</span>
-Desert Safari
-</li>
-
-<li>
-<span className="day-badge">4</span>
-Abu Dhabi Tour
-</li>
-
-<li>
-<span className="day-badge">5</span>
-Leisure Day
-</li>
-
-<li>
-<span className="day-badge">6</span>
-Departure
-</li>
-
+))}
 </ul>
 
 </div>
@@ -189,14 +203,9 @@ Departure
 <h3 className="green">Inclusions</h3>
 
 <ul className="include-list">
-
-<li>Round-trip flights</li>
-<li>4-star hotel</li>
-<li>Daily breakfast & dinner</li>
-<li>Desert safari with BBQ</li>
-<li>Abu Dhabi tour</li>
-<li>Visa assistance</li>
-
+{parseJSON(pkg.inclusions).map((item, idx) => (
+<li key={idx}>{item}</li>
+))}
 </ul>
 
 </div>
@@ -206,11 +215,9 @@ Departure
 <h3 className="red">Exclusions</h3>
 
 <ul className="exclude-list">
-
-<li>Lunch</li>
-<li>Personal expenses</li>
-<li>Travel insurance</li>
-
+{parseJSON(pkg.exclusions).map((item, idx) => (
+<li key={idx}>{item}</li>
+))}
 </ul>
 
 </div>
@@ -230,9 +237,9 @@ alt="agent"
 
 <div>
 
-<h4>Global Adventures</h4>
+<h4>{pkg.agent_name || "Global Adventures"}</h4>
 
-<p>⭐ 4.6 rating • 18 packages • 95 bookings</p>
+<p>⭐ {pkg.agent_rating || 4.6} rating • {pkg.agent_packages || 18} packages • {pkg.agent_bookings || 95} bookings</p>
 
 
 </div>

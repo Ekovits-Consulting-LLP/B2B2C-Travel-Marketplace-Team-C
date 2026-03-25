@@ -333,13 +333,26 @@ function ExplorePackage() {
                                         {isOpen && (
                                             <div className="day-content">
                                                 {(() => {
-                                                    const h = selectedPackage.hotels && selectedPackage.hotels.find(ht => typeof ht === 'object' && ht !== null && ht.day === index + 1);
-                                                    const hName = h ? h.name : null;
-                                                    const fallbackName = typeof selectedPackage.hotels?.[index] === 'string' ? selectedPackage.hotels[index] : null;
-                                                    const finalName = hName || fallbackName;
-                                                    return finalName ? (
+                                                    const hotels = Array.isArray(selectedPackage.hotels) ? selectedPackage.hotels : [];
+                                                    const hotelForDay = hotels.find((ht) => {
+                                                        if (!ht) return false;
+                                                        if (typeof ht === 'string') return false;
+                                                        const dayField = ht.day || ht.day_number || ht.dayNumber || ht.Days;
+                                                        return Number(dayField) === index + 1;
+                                                    });
+
+                                                    let hotelName = null;
+                                                    if (hotelForDay) {
+                                                        hotelName = hotelForDay.hotel_name || hotelForDay.name || hotelForDay.title || hotelForDay.hotel || null;
+                                                    }
+
+                                                    if (!hotelName && typeof hotels[index] === 'string') {
+                                                        hotelName = hotels[index];
+                                                    }
+
+                                                    return hotelName ? (
                                                         <p className="day-hotel" style={{ marginBottom: '8px', color: '#0f172a' }}>
-                                                            <strong>Hotel: </strong> {finalName}
+                                                            <strong>Hotel: </strong> {hotelName}
                                                         </p>
                                                     ) : null;
                                                 })()}

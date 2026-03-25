@@ -70,6 +70,7 @@ const BookPackage = () => {
         return;
     }
 
+    const user = JSON.parse(userStr);
     setIsSubmitting(true);
     try {
       const res = await fetch("/api/bookings", {
@@ -86,7 +87,8 @@ const BookPackage = () => {
           age: traveler.age,
           travelers: travelerCount,
           travel_date: travelDate,
-          additional_travelers: additionalTravelers
+          additional_travelers: additionalTravelers,
+          booked_by: user.id
         })
       });
       if (!res.ok) {
@@ -292,10 +294,126 @@ const BookPackage = () => {
           {step === 3 && (
             <div className="payment-container">
               {bookingComplete ? (
-                <div style={{ textAlign: "center", padding: "40px 20px" }}>
-                  <div style={{ fontSize: "40px", marginBottom: "10px" }}>✅</div>
-                  <h2 style={{ color: "#10b981", marginBottom: "10px" }}>Booking Successful</h2>
-                  <p>Your booking has been confirmed! Please keep your receipt for reference.</p>
+                <div className="receipt-container">
+                  <div className="receipt-header">
+                    <h2>🎉 Booking Confirmed!</h2>
+                    <p>Your booking has been successfully processed</p>
+                  </div>
+                  
+                  <div className="receipt-card">
+                    <div className="receipt-company">
+                      <h3>TravelHub</h3>
+                      <p>Booking Receipt</p>
+                    </div>
+                    
+                    <div className="receipt-details">
+                      <div className="receipt-row">
+                        <span className="receipt-label">Booking ID:</span>
+                        <span className="receipt-value">#{lastBookingId}</span>
+                      </div>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Booking Date:</span>
+                        <span className="receipt-value">{new Date().toLocaleDateString()}</span>
+                      </div>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Travel Date:</span>
+                        <span className="receipt-value">{travelDate ? new Date(travelDate).toLocaleDateString() : 'Not specified'}</span>
+                      </div>
+                    </div>
+                    
+                    <hr className="receipt-divider" />
+                    
+                    <div className="receipt-customer">
+                      <h4>Customer Information</h4>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Name:</span>
+                        <span className="receipt-value">{traveler.firstName} {traveler.lastName}</span>
+                      </div>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Email:</span>
+                        <span className="receipt-value">{traveler.email}</span>
+                      </div>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Phone:</span>
+                        <span className="receipt-value">{traveler.phone || 'Not provided'}</span>
+                      </div>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Address:</span>
+                        <span className="receipt-value">{traveler.address || 'Not provided'}</span>
+                      </div>
+                    </div>
+                    
+                    <hr className="receipt-divider" />
+                    
+                    <div className="receipt-package">
+                      <h4>Package Details</h4>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Package:</span>
+                        <span className="receipt-value">{pkg.title}</span>
+                      </div>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Destination:</span>
+                        <span className="receipt-value">{pkg.destination}</span>
+                      </div>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Duration:</span>
+                        <span className="receipt-value">{pkg.days} Days / {pkg.nights} Nights</span>
+                      </div>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Travelers:</span>
+                        <span className="receipt-value">{travelerCount} Person(s)</span>
+                      </div>
+                    </div>
+                    
+                    {additionalTravelers.length > 0 && (
+                      <>
+                        <hr className="receipt-divider" />
+                        <div className="receipt-travelers">
+                          <h4>Additional Travelers</h4>
+                          {additionalTravelers.map((t, i) => (
+                            <div key={i} className="receipt-row">
+                              <span className="receipt-label">Traveler {i + 2}:</span>
+                              <span className="receipt-value">{t.firstName} {t.lastName} (Age: {t.age})</span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                    
+                    <hr className="receipt-divider" />
+                    
+                    <div className="receipt-payment">
+                      <h4>Payment Summary</h4>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Price per person:</span>
+                        <span className="receipt-value">₹{Number(pkg.final_price || pkg.price).toLocaleString('en-IN')}</span>
+                      </div>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Travelers:</span>
+                        <span className="receipt-value">x {travelerCount}</span>
+                      </div>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Subtotal:</span>
+                        <span className="receipt-value">₹{Number((pkg.final_price || pkg.price) * travelerCount).toLocaleString('en-IN')}</span>
+                      </div>
+                      <div className="receipt-row">
+                        <span className="receipt-label">Taxes & Fees (10%):</span>
+                        <span className="receipt-value">₹{Number((pkg.final_price || pkg.price) * 0.1 * travelerCount).toLocaleString('en-IN')}</span>
+                      </div>
+                      <div className="receipt-row total">
+                        <span className="receipt-label">Total Amount:</span>
+                        <span className="receipt-value">₹{Number((pkg.final_price || pkg.price) * travelerCount * 1.1).toLocaleString('en-IN')}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="receipt-footer">
+                      <p>Thank you for choosing TravelHub!</p>
+                      <p>For any queries, contact our support team.</p>
+                      <button onClick={() => downloadReceipt(lastBookingId)} className="download-receipt-btn">
+                        📄 Download PDF Receipt
+                      </button>
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <>

@@ -302,3 +302,139 @@
     grid-column: span 1;
   }
 }
+
+/* Receipt Styling */
+.receipt-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.receipt-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.receipt-header h2 {
+  color: #1f2937;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.receipt-header p {
+  color: #475569;
+  font-size: 1rem;
+  margin-bottom: 0;
+  letter-spacing: 0.04em;
+}
+
+.receipt-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+  padding: 30px;
+  border: 1px solid #dbeafe;
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: 0.02em;
+}
+
+.receipt-company {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.receipt-company h3 {
+  font-size: 2rem;
+  color: #2563eb;
+  margin-bottom: 4px;
+  font-weight: 800;
+}
+
+.receipt-company p {
+  color: #64748b;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.receipt-details, .receipt-customer, .receipt-package, .receipt-travelers, .receipt-payment {
+  margin-bottom: 24px;
+}
+
+.receipt-details h4, .receipt-customer h4, .receipt-package h4, .receipt-travelers h4, .receipt-payment h4 {
+  color: #0f172a;
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 8px 0;
+}
+
+.receipt-label {
+  color: #64748b;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.receipt-value {
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.receipt-row.total {
+  border-top: 2px solid #e2e8f0;
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.receipt-row.total .receipt-label, .receipt-row.total .receipt-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.receipt-divider {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 24px 0;
+}
+
+.receipt-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid #f1f5f9;
+}
+
+.receipt-footer p {
+  color: #64748b;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.download-receipt-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: background 0.2s;
+}
+
+.download-receipt-btn:hover {
+  background: #1d4ed8;
+}

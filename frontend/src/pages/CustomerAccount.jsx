@@ -29,18 +29,41 @@ useEffect(()=>{
 
 useEffect(()=>{
   async function loadBookings(){
-    try{
-      const emailParam = encodeURIComponent(user?.email?.trim() || '');
-      const r = await fetch(`/api/bookings?email=${emailParam}`);
-      let bookings = await r.json();
+    if (!user) {
+      console.warn('No user in CustomerAccount; redirect to login');
+      navigate('/login');
+      return;
+    }
 
-      if (!bookings || bookings.length === 0){
-        const nameParam = encodeURIComponent(user?.full_name?.trim() || '');
-        const r2 = await fetch(`/api/bookings?customer_name=${nameParam}`);
-        bookings = await r2.json();
+    console.log('Full user object:', user);
+    console.log('Loading bookings for user:', user.email, 'role:', user.role, 'id:', user.id, 'type:', typeof user.id);
+
+    try{
+      let bookings = [];
+
+      if (user.role && user.role.toLowerCase() === 'agent') {
+        console.log('Fetching agent bookings for agent_id:', user.id);
+        const r = await fetch(`/api/bookings?booked_by=${user.id}`);
+        bookings = await r.json();
+        console.log('Agent bookings:', bookings);
+      } else if (user.role && user.role.toLowerCase() === 'admin') {
+        console.log('Fetching admin bookings for admin_id:', user.id);
+        const r = await fetch(`/api/bookings?booked_by=${user.id}`);
+        bookings = await r.json();
+        console.log('Admin bookings:', bookings);
+      } else {
+        console.log('Fetching customer bookings for customer_id:', user.id);
+        const r = await fetch(`/api/bookings?booked_by=${user.id}`);
+        bookings = await r.json();
+        console.log('Customer bookings:', bookings);
       }
 
-      console.log('customer bookings from API', bookings);
+      if (!bookings || bookings.length === 0) {
+        console.log('No bookings found for current user role:', user.role);
+      } else {
+        console.log('Found', bookings.length, 'bookings');
+      }
+
       setBookedPackages(bookings);
 
       const details = await Promise.all(bookings.map(async b => {
@@ -58,7 +81,7 @@ useEffect(()=>{
   }
 
   loadBookings();
-}, [user.email]);
+}, [user, navigate]);
 useEffect(() => {
   const storedSaved = localStorage.getItem('savedPackages');
   if (storedSaved) {
