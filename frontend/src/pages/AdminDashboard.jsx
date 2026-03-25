@@ -646,22 +646,22 @@ const AdminDashboard = () => {
 
                     <div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-                             <h2 style={{ margin: 0 }}>All Packages</h2>
-                             <button 
-                                 onClick={() => navigate("/admin/add-package")}
-                                 style={{
-                                     background: "#10b981",
-                                     color: "white",
-                                     border: "none",
-                                     padding: "10px 20px",
-                                     borderRadius: "8px",
-                                     cursor: "pointer",
-                                     fontWeight: "600"
-                                 }}
-                             >
-                                 + Add New Package
-                             </button>
-                         </div>
+                            <h2 style={{ margin: 0 }}>All Packages</h2>
+                            <button
+                                onClick={() => navigate("/admin/add-package")}
+                                style={{
+                                    background: "#10b981",
+                                    color: "white",
+                                    border: "none",
+                                    padding: "10px 20px",
+                                    borderRadius: "8px",
+                                    cursor: "pointer",
+                                    fontWeight: "600"
+                                }}
+                            >
+                                + Add New Package
+                            </button>
+                        </div>
 
                         <div style={{ marginBottom: "20px", display: "flex", alignItems: "center", gap: "12px" }}>
                             <label htmlFor="admin-destination-filter">Destination Filter:</label>
@@ -689,41 +689,52 @@ const AdminDashboard = () => {
                             <div key={pkg.id} style={{
                                 background: "white",
                                 padding: "20px",
-                                borderRadius: "10px",
-                                marginBottom: "15px",
-                                boxShadow: "0 4px 10px rgba(0,0,0,0.05)"
+                                borderRadius: "14px",
+                                marginBottom: "18px",
+                                boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+                                border: "1px solid rgba(148,163,184,0.25)",
+                                transition: "transform 0.20s ease, box-shadow 0.20s ease"
                             }}>
 
-                                <h3>{pkg.title}</h3>
-                                <p>{pkg.destination} • {pkg.days} Days / {pkg.nights} Nights</p>
-                                <p>Price: ₹{pkg.price}</p>
-                                <p>Hotels: {parseHotels(pkg.hotels)}</p>
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr auto", alignItems: "start", gap: "16px" }}>
+                                    <div>
+                                        <h3 style={{ margin: 0, fontSize: "1.35rem" }}>{pkg.title}</h3>
+                                        <p style={{ margin: "6px 0", color: "#475569", fontWeight: 500 }}>{pkg.destination} • {pkg.days} Days / {pkg.nights} Nights</p>
+                                        <p style={{ margin: "4px 0", color: "#334155", fontWeight: 500 }}><strong>Price:</strong> ₹{pkg.price}</p>
+                                        <p style={{ margin: "4px 0", color: "#334155", fontWeight: 500 }}><strong>Hotels:</strong> {parseHotels(pkg.hotels)}</p>
+                                    </div>
+                                    <div style={{ textAlign: "right" }}>
+                                        <div style={{
+                                            display: "inline-block",
+                                            padding: "5px 12px",
+                                            borderRadius: "999px",
+                                            fontWeight: 600,
+                                            fontSize: "0.85rem",
+                                            color: "white",
+                                            background:
+                                                pkg.status === "approved" ? "#10b981" :
+                                                    pkg.status === "rejected" ? "#ef4444" :
+                                                        "#f97316"
+                                        }}>
+                                            {pkg.status.toUpperCase()}
+                                        </div>
+                                        <div style={{ marginTop: "8px", color: "#0f172a", fontWeight: 500 }}>
+                                            Agent: {pkg.agent_name || "N/A"}
+                                        </div>
+                                    </div>
+                                </div>
 
-                                <p>Status:
-                                    <span style={{
-                                        marginLeft: "6px",
-                                        color:
-                                            pkg.status === "approved" ? "green" :
-                                                pkg.status === "rejected" ? "red" :
-                                                    "orange"
-                                    }}>
-                                        {pkg.status}
-                                    </span>
-                                </p>
-
-                                <p>Agent: {pkg.agent_name}</p>
-
-                                <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
-
+                                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "12px" }}>
                                     <button
                                         onClick={() => setSelectedPackage(pkg)}
                                         style={{
                                             background: "#6366f1",
                                             color: "white",
                                             border: "none",
-                                            padding: "6px 12px",
+                                            padding: "8px 14px",
                                             borderRadius: "6px",
-                                            cursor: "pointer"
+                                            cursor: "pointer",
+                                            fontWeight: 600
                                         }}
                                     >
                                         View Details
@@ -735,9 +746,10 @@ const AdminDashboard = () => {
                                             background: "#2563eb",
                                             color: "white",
                                             border: "none",
-                                            padding: "6px 12px",
+                                            padding: "8px 14px",
                                             borderRadius: "6px",
-                                            cursor: "pointer"
+                                            cursor: "pointer",
+                                            fontWeight: 600
                                         }}
                                     >
                                         Edit
@@ -749,14 +761,14 @@ const AdminDashboard = () => {
                                             background: "#ef4444",
                                             color: "white",
                                             border: "none",
-                                            padding: "6px 12px",
+                                            padding: "8px 14px",
                                             borderRadius: "6px",
-                                            cursor: "pointer"
+                                            cursor: "pointer",
+                                            fontWeight: 600
                                         }}
                                     >
                                         Delete
                                     </button>
-
                                 </div>
 
                             </div>

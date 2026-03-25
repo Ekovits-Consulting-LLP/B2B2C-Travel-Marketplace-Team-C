@@ -144,10 +144,10 @@ return false
 if(priceFilter.length){
 filteredPackages = filteredPackages.filter(pkg => {
 
-if(priceFilter.includes("low") && pkg.price < 1000) return true
-if(priceFilter.includes("mid") && pkg.price >=1000 && pkg.price <=2500) return true
-if(priceFilter.includes("high") && pkg.price >=2500 && pkg.price <=5000) return true
-if(priceFilter.includes("lux") && pkg.price >5000) return true
+if(priceFilter.includes("low") && pkg.final_price < 1000) return true
+if(priceFilter.includes("mid") && pkg.final_price >=1000 && pkg.final_price <=2500) return true
+if(priceFilter.includes("high") && pkg.final_price >=2500 && pkg.final_price <=5000) return true
+if(priceFilter.includes("lux") && pkg.final_price >5000) return true
 
 return false
 
@@ -170,19 +170,19 @@ setList([...list,value])
 }
 }
 if(sortOption==="low"){
-filteredPackages.sort((a,b)=>a.price-b.price)
+filteredPackages.sort((a,b)=>a.final_price - b.final_price)
 }
 
 if(sortOption==="high"){
-filteredPackages.sort((a,b)=>b.price-a.price)
+filteredPackages.sort((a,b)=>b.final_price - a.final_price)
 }
 
 if(sortOption==="rating"){
-filteredPackages.sort((a,b)=>b.rating-a.rating)
+filteredPackages.sort((a,b)=>b.rating - a.rating)
 }
 
 if(sortOption==="duration"){
-filteredPackages.sort((a,b)=>b.days-a.days)
+filteredPackages.sort((a,b)=>b.days - a.days)
 }
 
 return (

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Footer from "../components/Footer";
 import "../App.css";
-import { MapPin, Calendar, Users } from "lucide-react";
+import { MapPin, Calendar, Users, Heart, Share2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/packageDetails.css";
 
@@ -21,6 +21,7 @@ function ExplorePackage() {
     const [currentUser, setCurrentUser] = useState(null);
     const [isSaved, setIsSaved] = useState(false);
     const [shareMessage, setShareMessage] = useState('');
+    const [isBooked, setIsBooked] = useState(false);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -34,6 +35,38 @@ function ExplorePackage() {
         const saved = JSON.parse(localStorage.getItem('savedPackages') || '[]');
         setIsSaved(saved.includes(Number(id)));
     }, [id]);
+
+    useEffect(() => {
+        if (!id || !currentUser) {
+            setIsBooked(false);
+            return;
+        }
+
+        const checkBooking = async () => {
+            try {
+                const byUserRes = await fetch(`/api/bookings?booked_by=${currentUser.id}&package_id=${id}`);
+                const byUser = await byUserRes.json();
+                if (Array.isArray(byUser) && byUser.length > 0) {
+                    setIsBooked(true);
+                    return;
+                }
+
+                const byEmailRes = await fetch(`/api/bookings?email=${encodeURIComponent(currentUser.email)}&package_id=${id}`);
+                const byEmail = await byEmailRes.json();
+                if (Array.isArray(byEmail) && byEmail.length > 0) {
+                    setIsBooked(true);
+                    return;
+                }
+
+                setIsBooked(false);
+            } catch (err) {
+                console.error('Error checking booking status:', err);
+                setIsBooked(false);
+            }
+        };
+
+        checkBooking();
+    }, [id, currentUser]);
 
     useEffect(() => {
         if (!id) return;
@@ -174,6 +207,11 @@ function ExplorePackage() {
             return;
         }
 
+        if (!isBooked) {
+            setReviewError('You can submit a review only after booking this package.');
+            return;
+        }
+
         setReviewLoading(true);
 
         try {
@@ -252,33 +290,56 @@ function ExplorePackage() {
 </div>  
 
                     <div className="price-card">
-                        <p className="price-label">Starting from</p>
-                        <h2 className="price">
-                            Rs.{Number(selectedPackage.final_price || selectedPackage.price).toLocaleString("en-IN")}
-                            {selectedPackage.offer_percent > 0 && (
-                                <span className="old-price">Rs.{Number(selectedPackage.price).toLocaleString("en-IN")}</span>
-                            )}
-                        </h2>
-                        <p className="per-person">per person</p>
-                        {selectedPackage.offer_percent > 0 && (
-                            <div className="save-tag">Save {selectedPackage.offer_percent}%</div>
-                        )}
+                        <div className="price-card-top">
+                            <div>
+                                <p className="price-label">Starting from</p>
+                                <h2 className="price">
+                                    Rs.{Number(selectedPackage.final_price || selectedPackage.price).toLocaleString("en-IN")}
+                                    {selectedPackage.offer_percent > 0 && (
+                                        <span className="old-price">Rs.{Number(selectedPackage.price).toLocaleString("en-IN")}</span>
+                                    )}
+                                </h2>
+                                <p className="per-person">per person</p>
+                            </div>
+
+                            <div className="price-card-secondary">
+                                {selectedPackage.offer_percent > 0 && (
+                                    <div className="save-tag">Save {selectedPackage.offer_percent}%</div>
+                                )}
+
+                                <div className="action-row">
+                                    <button
+                                        className={`icon-only-btn ${isSaved ? 'saved' : ''}`}
+                                        onClick={toggleSave}
+                                        title={isSaved ? 'Unsave' : 'Save'}
+                                        aria-label={isSaved ? 'Unsave package' : 'Save package'}
+                                    >
+                                        <Heart className="action-icon" />
+                                    </button>
+
+                                    <button
+                                        className="icon-only-btn"
+                                        onClick={handleShare}
+                                        title="Share"
+                                        aria-label="Share package"
+                                    >
+                                        <Share2 className="action-icon" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
                         <button className="book-btn" onClick={handleBookNow}>Book Now</button>
 
-                        <div className="action-row">
-                            <button className="action-btn" onClick={toggleSave}>{isSaved ? '💖 Saved' : '🤍 Save'}</button>
-                            <button className="action-btn" onClick={handleShare}>🔗 Share</button>
+                        {shareMessage && <p className="share-message">{shareMessage}</p>}
+
+                        <div className="help-card">
+                            <h4>Need Help?</h4>
+                            <p className="help-text">
+                                Have questions about this package? Contact our travel experts.
+                            </p>
+                            <button className="contact-btn" onClick={handleContactSupport}>Contact Support</button>
                         </div>
-
-                        {shareMessage && <p style={{ color: '#0b7285', marginTop: '8px' }}>{shareMessage}</p>}
-
-                        <hr />
-                        <h4>Need Help?</h4>
-                        <p className="help-text">
-                            Have questions about this package? Contact our travel experts.
-                        </p>
-                        <button className="contact-btn" onClick={handleContactSupport}>Contact Support</button>
                     </div>
                 </div>
 
@@ -430,34 +491,50 @@ function ExplorePackage() {
                     {reviewError && <div style={{ color: 'red', marginBottom: '8px' }}>{reviewError}</div>}
                     {reviewSuccess && <div style={{ color: 'green', marginBottom: '8px' }}>{reviewSuccess}</div>}
 
-                    <div style={{ marginBottom: '16px' }}>
-                        <select
-                            value={reviewForm.review_type}
-                            onChange={(e) => setReviewForm({ ...reviewForm, review_type: e.target.value })}
-                            style={{ marginRight: '8px' }}
-                        >
-                            <option value="package">Package</option>
-                            <option value="agent">Agent</option>
-                        </select>
-                        <input
-                            type="number"
-                            min="1"
-                            max="5"
-                            value={reviewForm.rating}
-                            onChange={(e) => setReviewForm({ ...reviewForm, rating: e.target.value })}
-                            style={{ width: '80px', marginRight: '8px', padding: '6px' }}
-                        />
-                        <span>{currentUser ? `Logged as: ${currentUser.full_name}` : 'Login to submit review'}</span>
-                    </div>
-                    <textarea
-                        value={reviewForm.description}
-                        onChange={(e) => setReviewForm({ ...reviewForm, description: e.target.value })}
-                        placeholder="Write your review..."
-                        style={{ width: '100%', minHeight: '100px', marginBottom: '8px', padding: '8px' }}
-                    />
-                    <button onClick={handleReviewSubmit} disabled={reviewLoading} style={{ padding: '10px 16px', background: '#1f7a96', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
-                        {reviewLoading ? 'Submitting...' : 'Submit Review'}
-                    </button>
+                    {!currentUser && (
+                        <div style={{ marginBottom: '16px', color: '#475569' }}>
+                            Please login to submit a review.
+                        </div>
+                    )}
+
+                    {currentUser && !isBooked && (
+                        <div style={{ marginBottom: '16px', color: '#475569' }}>
+                            You can add a review only after booking this package.
+                        </div>
+                    )}
+
+                    {currentUser && isBooked && (
+                        <>
+                            <div style={{ marginBottom: '16px' }}>
+                                <select
+                                    value={reviewForm.review_type}
+                                    onChange={(e) => setReviewForm({ ...reviewForm, review_type: e.target.value })}
+                                    style={{ marginRight: '8px' }}
+                                >
+                                    <option value="package">Package</option>
+                                    <option value="agent">Agent</option>
+                                </select>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max="5"
+                                    value={reviewForm.rating}
+                                    onChange={(e) => setReviewForm({ ...reviewForm, rating: e.target.value })}
+                                    style={{ width: '80px', marginRight: '8px', padding: '6px' }}
+                                />
+                                <span>{`Logged as: ${currentUser.full_name}`}</span>
+                            </div>
+                            <textarea
+                                value={reviewForm.description}
+                                onChange={(e) => setReviewForm({ ...reviewForm, description: e.target.value })}
+                                placeholder="Write your review..."
+                                style={{ width: '100%', minHeight: '100px', marginBottom: '8px', padding: '8px' }}
+                            />
+                            <button onClick={handleReviewSubmit} disabled={reviewLoading} style={{ padding: '10px 16px', background: '#1f7a96', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
+                                {reviewLoading ? 'Submitting...' : 'Submit Review'}
+                            </button>
+                        </>
+                    )}
 
                     <div style={{ marginTop: '18px' }}>
                         {packageReviews.length === 0 && <p>No reviews yet. Be the first to review.</p>}
