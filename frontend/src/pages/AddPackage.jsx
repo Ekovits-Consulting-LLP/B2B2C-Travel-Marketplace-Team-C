@@ -26,12 +26,18 @@ const AddPackage = () => {
 
     const [images, setImages] = useState([]);
 
+    const [errors, setErrors] = useState({});
+
     const packageTypesList = ["Luxury", "Family", "Honeymoon", "Adventure", "Leisure", "Group", "Couple"];
 
     /* INPUT CHANGE */
 
     const handleChange = (e) => {
-        setPkg({ ...pkg, [e.target.name]: e.target.value });
+        const name = e.target.name;
+        setPkg({ ...pkg, [name]: e.target.value });
+        if (errors[name]) {
+            setErrors(prev => ({...prev, [name]: false}));
+        }
     };
 
     const handleTypeChange = (type) => {
@@ -39,7 +45,13 @@ const AddPackage = () => {
             const types = prev.package_types.includes(type)
                 ? prev.package_types.filter(t => t !== type)
                 : [...prev.package_types, type];
-            return { ...prev, package_types: types };
+            const newPkg = { ...prev, package_types: types };
+            if (types.length === 0) {
+                setErrors(prev => ({...prev, package_types: true}));
+            } else {
+                setErrors(prev => ({...prev, package_types: false}));
+            }
+            return newPkg;
         });
     };
 
@@ -47,12 +59,24 @@ const AddPackage = () => {
         setPkg(prev => {
             const hotels = [...prev.hotels];
             const index = hotels.findIndex(h => h.day === day);
-            if (index > -1) {
-                hotels[index].name = name;
+            if (!name) {
+                if (index > -1) {
+                    hotels.splice(index, 1);
+                }
             } else {
-                hotels.push({ day, name });
+                if (index > -1) {
+                    hotels[index].name = name;
+                } else {
+                    hotels.push({ day, name });
+                }
             }
-            return { ...prev, hotels };
+            const newPkg = { ...prev, hotels };
+            if (hotels.length < prev.itinerary.length || hotels.some(h => !h.name)) {
+                setErrors(prev => ({...prev, hotels: true}));
+            } else {
+                setErrors(prev => ({...prev, hotels: false}));
+            }
+            return newPkg;
         });
     };
 
@@ -87,13 +111,49 @@ const AddPackage = () => {
     /* IMAGE SELECT */
 
     const handleImages = (e) => {
-    setImages(Array.from(e.target.files));
+        const imgs = Array.from(e.target.files);
+        setImages(imgs);
+        if (imgs.length === 0) {
+            setErrors(prev => ({...prev, images: true}));
+        } else {
+            setErrors(prev => ({...prev, images: false}));
+        }
     };
 
 
     /* SUBMIT PACKAGE */
 
     const submitPackage = async () => {
+
+        let hasError = false;
+        const fields = ['title', 'destination', 'days', 'nights', 'price', 'travelers', 'rating', 'description', 'offer_percent'];
+        fields.forEach(field => {
+            if (!pkg[field]) {
+                setErrors(prev => ({...prev, [field]: true}));
+                hasError = true;
+            }
+        });
+        if (pkg.package_types.length === 0) {
+            setErrors(prev => ({...prev, package_types: true}));
+            hasError = true;
+        }
+        if (images.length === 0) {
+            setErrors(prev => ({...prev, images: true}));
+            hasError = true;
+        }
+        if (pkg.inclusions.length === 0 || pkg.inclusions.some(i => !i)) {
+            setErrors(prev => ({...prev, inclusions: true}));
+            hasError = true;
+        }
+        if (pkg.exclusions.length === 0 || pkg.exclusions.some(e => !e)) {
+            setErrors(prev => ({...prev, exclusions: true}));
+            hasError = true;
+        }
+        if (pkg.itinerary.some(day => !day.title || !day.description || !pkg.hotels.find(h => h.day === day.day)?.name)) {
+            setErrors(prev => ({...prev, itinerary: true}));
+            hasError = true;
+        }
+        if (hasError) return;
 
         try {
 
@@ -176,27 +236,27 @@ const AddPackage = () => {
                     gap: "15px"
                 }}>
 
-                    <input name="title" placeholder="Package Title" onChange={handleChange} style={input} />
-                    <input name="destination" placeholder="Destination" onChange={handleChange} style={input} />
-                    <input name="days" type="number" placeholder="Days" onChange={handleChange} style={input} />
-                    <input name="nights" type="number" placeholder="Nights" onChange={handleChange} style={input} />
-                    <input name="price" type="number" placeholder="Price per Person" onChange={handleChange} style={input} />
-                    <input name="travelers" type="number" placeholder="Max Travelers" onChange={handleChange} style={input} />
-                    <input name="rating" type="number" placeholder="Hotel Rating" onChange={handleChange} style={input} />
+                    <input name="title" required placeholder="Package Title" onChange={handleChange} style={{...input, borderColor: errors.title ? 'red' : '#ddd'}} />
+                    <input name="destination" required placeholder="Destination" onChange={handleChange} style={{...input, borderColor: errors.destination ? 'red' : '#ddd'}} />
+                    <input name="days" type="number" min="1" required placeholder="Days" onChange={handleChange} style={{...input, borderColor: errors.days ? 'red' : '#ddd'}} />
+                    <input name="nights" type="number" min="1" required placeholder="Nights" onChange={handleChange} style={{...input, borderColor: errors.nights ? 'red' : '#ddd'}} />
+                    <input name="price" type="number" min="1" required placeholder="Price per Person" onChange={handleChange} style={{...input, borderColor: errors.price ? 'red' : '#ddd'}} />
+                    <input name="travelers" type="number" min="1" required placeholder="Max Travelers" onChange={handleChange} style={{...input, borderColor: errors.travelers ? 'red' : '#ddd'}} />
+                    <input name="rating" type="number" min="1" max="5" required placeholder="Hotel Rating" onChange={handleChange} style={{...input, borderColor: errors.rating ? 'red' : '#ddd'}} />
 
                     <textarea
                         name="description"
-                        placeholder="Description"
+                        required placeholder="Description"
                         onChange={handleChange}
-                        style={{ ...input, gridColumn: "span 4", height: "80px" }}
+                        style={{ ...input, gridColumn: "span 4", height: "80px", borderColor: errors.description ? 'red' : '#ddd' }}
                     />
 
                     <input 
                         name="offer_percent" 
                         type="number" 
-                        placeholder="Discount Offer (%)" 
+                        required placeholder="Discount Offer (%)" 
                         onChange={handleChange} 
-                        style={input} 
+                        style={{...input, borderColor: errors.offer_percent ? 'red' : '#ddd'}} 
                     />
 
                     <label style={{ ...input, display: "flex", alignItems: "center", gap: "10px", background: "#fff" }}>
@@ -229,6 +289,7 @@ const AddPackage = () => {
                             </label>
                         ))}
                     </div>
+                    {errors.package_types && <p style={{color: 'red', marginTop: '10px'}}>Please select at least one package type</p>}
                 </div>
 
             </div>
@@ -243,10 +304,13 @@ const AddPackage = () => {
                 <input
                     type="file"
                     multiple
+                    required
                     accept="image/*"
                     onChange={handleImages}
                     style={{ marginTop: "10px" }}
                 />
+
+                {errors.images && <p style={{color: 'red'}}>Please upload at least one image</p>}
 
                 {/* IMAGE PREVIEW */}
 
@@ -285,12 +349,17 @@ const AddPackage = () => {
                 {pkg.inclusions.map((inc, i) => (
                     <input
                         key={i}
-                        placeholder="Example: Round Trip Flights"
-                        style={{ ...input, marginTop: "10px" }}
+                        required placeholder="Example: Round Trip Flights"
+                        style={{ ...input, marginTop: "10px", borderColor: errors.inclusions ? 'red' : '#ddd' }}
                         onChange={(e) => {
                             const arr = [...pkg.inclusions];
                             arr[i] = e.target.value;
                             setPkg({ ...pkg, inclusions: arr });
+                            if (arr.length === 0 || arr.some(inc => !inc)) {
+                                setErrors(prev => ({...prev, inclusions: true}));
+                            } else {
+                                setErrors(prev => ({...prev, inclusions: false}));
+                            }
                         }}
                     />
                 ))}
@@ -298,6 +367,7 @@ const AddPackage = () => {
                 <button onClick={addInclusion} style={addBtn}>
                     + Add Inclusion
                 </button>
+                {errors.inclusions && <p style={{color: 'red'}}>Please fill all inclusions</p>}
 
             </div>
 
@@ -311,12 +381,17 @@ const AddPackage = () => {
                 {pkg.exclusions.map((exc, i) => (
                     <input
                         key={i}
-                        placeholder="Example: Personal Expenses"
-                        style={{ ...input, marginTop: "10px" }}
+                        required placeholder="Example: Personal Expenses"
+                        style={{ ...input, marginTop: "10px", borderColor: errors.exclusions ? 'red' : '#ddd' }}
                         onChange={(e) => {
                             const arr = [...pkg.exclusions];
                             arr[i] = e.target.value;
                             setPkg({ ...pkg, exclusions: arr });
+                            if (arr.length === 0 || arr.some(exc => !exc)) {
+                                setErrors(prev => ({...prev, exclusions: true}));
+                            } else {
+                                setErrors(prev => ({...prev, exclusions: false}));
+                            }
                         }}
                     />
                 ))}
@@ -324,6 +399,7 @@ const AddPackage = () => {
                 <button onClick={addExclusion} style={addBtn}>
                     + Add Exclusion
                 </button>
+                {errors.exclusions && <p style={{color: 'red'}}>Please fill all exclusions</p>}
 
             </div>
 
@@ -345,28 +421,41 @@ const AddPackage = () => {
 
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px", marginTop: "10px" }}>
                             <input
+                                required
                                 placeholder="Day Title"
-                                style={input}
+                                style={{...input, borderColor: errors.itinerary ? 'red' : '#ddd'}}
                                 onChange={(e) => {
                                     const arr = [...pkg.itinerary];
                                     arr[i].title = e.target.value;
                                     setPkg({ ...pkg, itinerary: arr });
+                                    if (arr.some(day => !day.title || !day.description)) {
+                                        setErrors(prev => ({...prev, itinerary: true}));
+                                    } else {
+                                        setErrors(prev => ({...prev, itinerary: false}));
+                                    }
                                 }}
                             />
                             <input
+                                required
                                 placeholder="Hotel for this day"
-                                style={input}
+                                style={{...input, borderColor: errors.itinerary ? 'red' : '#ddd'}}
                                 onChange={(e) => handleHotelChange(day.day, e.target.value)}
                             />
                         </div>
 
                         <textarea
+                            required
                             placeholder="Day Description"
-                            style={{ ...input, marginTop: "10px", height: "60px" }}
+                            style={{ ...input, marginTop: "10px", height: "60px", borderColor: errors.itinerary ? 'red' : '#ddd' }}
                             onChange={(e) => {
                                 const arr = [...pkg.itinerary];
                                 arr[i].description = e.target.value;
                                 setPkg({ ...pkg, itinerary: arr });
+                                if (arr.some(day => !day.title || !day.description)) {
+                                    setErrors(prev => ({...prev, itinerary: true}));
+                                } else {
+                                    setErrors(prev => ({...prev, itinerary: false}));
+                                }
                             }}
                         />
 
@@ -418,6 +507,7 @@ const AddPackage = () => {
                 <button onClick={addDay} style={addBtn}>
                     + Add Day
                 </button>
+                {errors.itinerary && <p style={{color: 'red'}}>Please fill all itinerary details</p>}
 
             </div>
 

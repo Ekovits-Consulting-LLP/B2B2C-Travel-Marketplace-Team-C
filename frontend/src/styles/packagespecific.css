@@ -212,7 +212,7 @@ box-shadow:0 0 0 2px rgba(37,99,235,0.15);
 
 .cards-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  grid-template-columns:repeat(2, 1fr);
   gap:25px;
   align-items:start;
 }
@@ -229,7 +229,7 @@ box-shadow:0 0 0 2px rgba(37,99,235,0.15);
   box-shadow:0 10px 25px rgba(0,0,0,0.08);
   display:flex;
   flex-direction:column;
-  min-height:520px;
+  min-height:440px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -244,9 +244,9 @@ box-shadow:0 0 0 2px rgba(37,99,235,0.15);
 
 .travel-image{
   position:relative;
-  height:280px;
+  height:200px;
   overflow:hidden;
-  min-height:280px;
+  min-height:200px;
 }
 
 .travel-image img{
@@ -502,4 +502,10 @@ align-items:center;
 justify-content:center;
 padding:0;
 cursor:pointer;
+}
+
+@media (max-width: 768px){
+  .cards-grid{
+    grid-template-columns:1fr;   /* mobile = 1 card */
+  }
 }

@@ -208,7 +208,7 @@ function NewDestinationsPage() {
     margin: "100px auto 100px ,auto",
     padding: "60px 50px",
     borderRadius: "16px",
-    background: "linear-gradient(90deg,#2563eb,#16a34a)",
+    background: "#2563eb",
     color: "white",
     textAlign: "center"
   }}
